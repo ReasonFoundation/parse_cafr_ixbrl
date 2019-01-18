@@ -1,42 +1,43 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Get data from websites
-# https://davidtauriello.github.io/cafr/ixviewer/../samples/3/Alexandria-2018-Statements.htm
-#  
-# https://davidtauriello.github.io/cafr/ixviewer/ix?doc=../samples/4/FallsChurch-2018-Statements.htm
-#  
-# https://davidtauriello.github.io/cafr/ixviewer/ix?doc=../samples/5/Loudoun-2018-Statements.htm
+# ## Urls to parse
+# URLs that take too long to return data:
+# - https://xbrlus.github.io/cafr/samples/8/va-c-bris-20160630.xhtml
 
-# ## Files to parse
-# (Later we can do URLs also)
+# urls = ['https://xbrlus.github.io/cafr/samples/10/va-o-albe-20170630.xhtml',
+#         'https://xbrlus.github.io/cafr/samples/9/va-t-ashl-20170630.xhtml', 
+#         'https://xbrlus.github.io/cafr/samples/8/va-c-bris-20160630.xhtml',
+#         'https://xbrlus.github.io/cafr/samples/6/ga-20190116.htm',
+#         'https://xbrlus.github.io/cafr/samples/1/StPete_StmtNetPos_iXBRL_20190116.htm',
+#         'https://xbrlus.github.io/cafr/samples/2/VABeach_StmtNetPos_iXBRL_20190116.htm',
+#         'https://xbrlus.github.io/cafr/samples/7/ut-20190117.htm']
 
-# In[95]:
+# In[31]:
 
 
-file_paths = ['Alexandria-2018-Statements.htm', 'FallsChurch-2018-Statements.htm', 'Loudoun-2018-Statements.htm']
+urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm',
+        'https://xbrlus.github.io/cafr/samples/4/FallsChurch-2018-Statements.htm',
+        'https://xbrlus.github.io/cafr/samples/5/Loudoun-2018-Statements.htm',
+        'https://xbrlus.github.io/cafr/samples/6/ga-20190116.htm',
+        'https://xbrlus.github.io/cafr/samples/1/StPete_StmtNetPos_iXBRL_20190116.htm',
+        'https://xbrlus.github.io/cafr/samples/2/VABeach_StmtNetPos_iXBRL_20190116.htm',
+        'https://xbrlus.github.io/cafr/samples/7/ut-20190117.htm']
 
 
 # ## Libraries
 # **BeautifulSoup**: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
 
-# In[1]:
+# In[2]:
 
 
-#from bs4 import BeautifulSoup
-import re
+import requests
 import pandas as pd
-#soup = BeautifulSoup(ixbrl, 'html.parser')
+
+import re
 
 
-# In[8]:
-
-
-# This is my little function for inspecting objects.
-from mydir import mydir
-
-
-# In[59]:
+# In[3]:
 
 
 # This is a quick hack replacement for BeautifulSoup, to work around whatever problem we're having there.
@@ -55,9 +56,6 @@ def tags_from_html(name, html):
         tag['attributes'] = atts
         tags.append(tag)
     return tags
-        
-#tags_from_html('xbrldi:explicitMember', test_html)
-#tags_from_html('xb', test_html)
 
 
 # ## Context definitions
@@ -81,15 +79,19 @@ def tags_from_html(name, html):
 # 
 #         <td id="_NETPOSITION_B10" style="text-align:right;width:114px;">$&#160;&#160;&#160;&#160;&#160;&#160;&#160;<ix:nonFraction name="cafr:CashAndCashEquivalents" contextRef="_ctx3" id="NETPOSITION_B10" unitRef="ISO4217_USD" decimals = "0" format="ixt:numdotdecimal">336,089,928</ix:nonFraction>&#160;</td>
 
-# In[73]:
+# In[33]:
 
 
 class XbrliDocument:
     def __init__(self, path = None, url = None):
-        # TODO: Add url support.
         if path:
             with open(path,'r') as source:
                 html = source.read()
+        elif url:
+            html = requests.get(url).text
+            print(f'DEBUG: Got html from {url}')
+        else:
+            raise Exception("Need a path or url argument!")
         
         self.contexts = self._contexts_from_html(html)
         self.ix_fields = self._ix_fields_from_html(html)
@@ -98,11 +100,11 @@ class XbrliDocument:
         contexts = {}   # id: text description
         for tag in tags_from_html('xbrli:context', html):
             text = ''
-            #content = tag['content']
             members = []
             for member in tags_from_html('xbrldi:explicitMember', tag['content']):
                 try:
-                    members.append(member['content'][5:])
+                    members.append(member['content'].replace('cafr:', '').replace('Member', ''))
+                    members.sort()
                 except:
                     pass
             text += ' '.join(members)    
@@ -120,20 +122,26 @@ class XbrliDocument:
                     # If there is description text, put it in parenthesis (if empty string, no parenthesis).
                     if description: description = f' ({description})'
 
-                    name = tag['attributes']['name'][5:]
+                    name = tag['attributes']['name'].replace('cafr:', '')
                     text = tag['content']
 
                     ix_fields[f'{name}{description}'] = text 
                 except Exception as e:
-                    print(f"*** Exception: {e}")
+                    print(f"*** Exception: {type(e)}: {e}")
         return ix_fields
 
 
-# In[111]:
+# In[34]:
 
 
 data = {}
-docs = [XbrliDocument(path) for path in file_paths]
+docs = []
+for url in urls:
+    print(f'Downloading {url}...')
+    doc = XbrliDocument(url=url)
+    docs.append(doc)
+
+print(f"DEBUG: Found {len(docs)} docs")
 
 # Because docs can have missing fields, and for the spreadsheet all docs must have entries for all fields,
 # first need to figure out what all the fields from all the docs are, before processing the data.
@@ -154,7 +162,8 @@ for doc in docs:
 
 # Use Pandas to turn data dictionary into csv.
 df = pd.DataFrame(data)
-df.to_csv('output.csv', index=False)
+#df.to_csv('output.csv', index=False)
+df.to_excel('output.xlsx', index=False)
 
-print(f"Processed data for {len(file_paths)} entities, with a total of {len(data)} fields. See output.csv")
+print(f"Processed data for {len(urls)} entities, with a total of {len(data)} fields. See output.xlsx.")
 
