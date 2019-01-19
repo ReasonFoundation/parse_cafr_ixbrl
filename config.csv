@@ -1,9 +1,9 @@
 Output Field Name,Input Field Names (a;b;c)
 Name of Government,cafr:NameOfGovernment
 State,cafr:NameOfState
-Fiscal Year End, cafr:FiscalEndDate
+Fiscal Year End,cafr:FiscalEndDate
 Audit Opinion,cafr:AuditOpinion
-Audit Firm, cafr:NameOfAuditFirm
+Audit Firm,cafr:NameOfAuditFirm
 Liabilities - Governmental Activities, cafr:Liabilities (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
 Net Position - Governmental Activities,cafr:NetPosition (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
 Unrestricted Net Position - Governmental Activities,cafr:NetPositionUnrestricted (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
