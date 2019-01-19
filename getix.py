@@ -126,7 +126,7 @@ def tags_from_html(name, html):
 # 
 #         <td id="_NETPOSITION_B10" style="text-align:right;width:114px;">$&#160;&#160;&#160;&#160;&#160;&#160;&#160;<ix:nonFraction name="cafr:CashAndCashEquivalents" contextRef="_ctx3" id="NETPOSITION_B10" unitRef="ISO4217_USD" decimals = "0" format="ixt:numdotdecimal">336,089,928</ix:nonFraction>&#160;</td>
 
-# In[52]:
+# In[64]:
 
 
 class XbrliDocument:
@@ -150,7 +150,6 @@ class XbrliDocument:
             members = []
             for member in tags_from_html('xbrldi:explicitMember', tag['content']):
                 try:
-                    #members.append(member['content'].replace('cafr:', '').replace('Member', ''))
                     members.append(member['content'])
                     members.sort()
                 except:
@@ -165,18 +164,23 @@ class XbrliDocument:
             for tag in tags_from_html(ix_name, html):
                 try:
                     context = tag['attributes']['contextref']
-                    description = self.contexts[context]
+                    
+                    try:
+                        description = self.contexts[context]
+                    except:
+                        description = context
+                        print(f'*** Error: document missing context info for {context}, using context name instead.')
 
                     # If there is description text, put it in parenthesis (if empty string, no parenthesis).
                     if description: description = f' ({description})'
 
-#                    name = tag['attributes']['name'].replace('cafr:', '')
                     name = tag['attributes']['name']
                     text = tag['content']
 
                     ix_fields[f'{name}{description}'] = text 
                 except Exception as e:
                     print(f"*** Exception: {type(e)}: {e}")
+                    print(tag)
         return ix_fields
 
 
@@ -244,7 +248,7 @@ def test():
     main(paths)
 
 
-# In[55]:
+# In[66]:
 
 
 #main()
