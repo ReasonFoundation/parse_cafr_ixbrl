@@ -1,3 +1,14 @@
 Output Field Name,Input Field Names (a;b;c)
-Document Title,cafr:DocumentTitle
 Name of Government,cafr:NameOfGovernment
+State,cafr:NameOfState
+Fiscal Year End, cafr:FiscalEndDate
+Audit Opinion,cafr:AuditOpinion
+Audit Firm, cafr:NameOfAuditFirm
+Liabilities - Governmental Activities, cafr:Liabilities (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
+Net Position - Governmental Activities,cafr:NetPosition (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
+Unrestricted Net Position - Governmental Activities,cafr:NetPositionUnrestricted (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
+Charges for Services - Governmental Activities,cafr:ChargesForServices (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
+Operating Grants And Contributions - Governmental Activities,cafr:OperatingGrantsAndContributions (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
+Capital Grants And Contributions - Governmental Activities,cafr:CapitalGrantsAndContributions (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
+Expenses - Governmental Activities,cafr:Expenses (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
+Change In Net Position - Governmental Activities,cafr:ChangeInNetPosition (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
