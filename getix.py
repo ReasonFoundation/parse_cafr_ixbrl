@@ -5,31 +5,43 @@
 # URLs that take too long to return data:
 # - https://xbrlus.github.io/cafr/samples/8/va-c-bris-20160630.xhtml
 
-# urls = ['https://xbrlus.github.io/cafr/samples/10/va-o-albe-20170630.xhtml',
-#         'https://xbrlus.github.io/cafr/samples/9/va-t-ashl-20170630.xhtml', 
-#         'https://xbrlus.github.io/cafr/samples/8/va-c-bris-20160630.xhtml',
-#         'https://xbrlus.github.io/cafr/samples/6/ga-20190116.htm',
-#         'https://xbrlus.github.io/cafr/samples/1/StPete_StmtNetPos_iXBRL_20190116.htm',
-#         'https://xbrlus.github.io/cafr/samples/2/VABeach_StmtNetPos_iXBRL_20190116.htm',
-#         'https://xbrlus.github.io/cafr/samples/7/ut-20190117.htm']
+#     urls = ['https://xbrlus.github.io/cafr/samples/10/va-o-albe-20170630.xhtml',
+#             'https://xbrlus.github.io/cafr/samples/9/va-t-ashl-20170630.xhtml', 
+#             'https://xbrlus.github.io/cafr/samples/8/va-c-bris-20160630.xhtml',
+#             'https://xbrlus.github.io/cafr/samples/6/ga-20190116.htm',
+#             'https://xbrlus.github.io/cafr/samples/1/StPete_StmtNetPos_iXBRL_20190116.htm',
+#             'https://xbrlus.github.io/cafr/samples/2/VABeach_StmtNetPos_iXBRL_20190116.htm',
+#             'https://xbrlus.github.io/cafr/samples/7/ut-20190117.htm']
 
-# In[31]:
+# In[47]:
 
 
 urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm',
         'https://xbrlus.github.io/cafr/samples/4/FallsChurch-2018-Statements.htm',
         'https://xbrlus.github.io/cafr/samples/5/Loudoun-2018-Statements.htm',
         'https://xbrlus.github.io/cafr/samples/6/ga-20190116.htm',
+        'https://xbrlus.github.io/cafr/samples/1/StPete_StmtNetPos_iXBRL_20190116.htm',
+        'https://xbrlus.github.io/cafr/samples/2/VABeach_StmtNetPos_iXBRL_20190116.htm',
         'https://xbrlus.github.io/cafr/samples/7/ut-20190117.htm']
 
 
 # ## Libraries
 # **BeautifulSoup**: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
 
+# In[48]:
+
+
 import requests
 from pandas import Series, DataFrame
 import pandas as pd
 import re
+
+# In Python 3.7, dict is automatically ordered, but to allow for people using previous versions,
+# need to use an OrderedDict or the results will be messy.
+from collections import OrderedDict
+
+
+# In[49]:
 
 
 def config_fields(path = 'config.csv'):
@@ -48,11 +60,18 @@ def config_fields(path = 'config.csv'):
      'Name of Government': ['cafr:NameOfGovernment']}
     '''
     df = pd.read_csv(path)
-    return {row[0] : row[1].split(';') for row in df.itertuples(index=False)}
+    fields = OrderedDict()
+    for row in df.itertuples(index=False):
+        fields[row[0]] = row[1].split(';')
+    return fields
+
+
+# In[50]:
+
 
 def configure_data(data, fields):
     ''' Given a dictionary of data and a dictionary of configuration info, returns dictionary conforming to the configuration. '''
-    configured = {}
+    configured = OrderedDict()
 
     # Determine how many entries each column must have, for missing fields.
     #row_count = len(data.values[0])
@@ -65,6 +84,9 @@ def configure_data(data, fields):
     return configured
 
 
+# In[51]:
+
+
 # This is a quick hack replacement for BeautifulSoup, to work around whatever problem we're having there.
 def tags_from_html(name, html):
     tags = []
@@ -74,13 +96,38 @@ def tags_from_html(name, html):
         tag = {'name': name}
         tag['content'] = content
         
-        atts = {}
+        atts = OrderedDict()
         att_results = re.findall(f'(\S+)=["\']?((?:.(?!["\']?\s+(?:\S+)=|[>"\']))+.)["\']?', element)
         for att, value in att_results:
             atts[att.lower()] = value   # Lower-casing attribute name to avoid case errors in the HTML.
         tag['attributes'] = atts
         tags.append(tag)
     return tags
+
+
+# ## Context definitions
+# Need to get a description for each context. A context element looks like this:
+# 
+#        <xbrli:context id="_ctx9">
+#           <xbrli:entity><xbrli:identifier scheme="http://www.govwiki.info">47210100100000</xbrli:identifier></xbrli:entity>
+#           <xbrli:period><xbrli:instant>2018-06-30</xbrli:instant></xbrli:period>
+#           <xbrli:scenario>
+#              <xbrldi:explicitMember dimension="cafr:FinancialReportingEntityAxis">cafr:PrimaryGovernmentActivitiesMember</xbrldi:explicitMember>
+#              <xbrldi:explicitMember dimension="cafr:BasisOfAccountingAxis">cafr:ModifiedAccrualBasisOfAccountingMember</xbrldi:explicitMember>
+#              <xbrldi:explicitMember dimension="cafr:ActivityTypeAxis">cafr:GovernmentalTypeActivityMember</xbrldi:explicitMember>
+#              <xbrldi:explicitMember dimension="cafr:ClassificationOfFundTypeAxis">cafr:GeneralFundMember</xbrldi:explicitMember>
+#              <xbrldi:explicitMember dimension="cafr:MagnitudeAxis">cafr:MajorMember</xbrldi:explicitMember>
+#           </xbrli:scenario>
+#        </xbrli:context>
+# 
+
+# ## Actual data
+# Data looks like this:
+# 
+#         <td id="_NETPOSITION_B10" style="text-align:right;width:114px;">$&#160;&#160;&#160;&#160;&#160;&#160;&#160;<ix:nonFraction name="cafr:CashAndCashEquivalents" contextRef="_ctx3" id="NETPOSITION_B10" unitRef="ISO4217_USD" decimals = "0" format="ixt:numdotdecimal">336,089,928</ix:nonFraction>&#160;</td>
+
+# In[52]:
+
 
 class XbrliDocument:
     def __init__(self, path = None, url = None):
@@ -97,7 +144,7 @@ class XbrliDocument:
         self.ix_fields = self._ix_fields_from_html(html)
     
     def _contexts_from_html(self, html):
-        contexts = {}   # id: text description
+        contexts = OrderedDict()   # id: text description
         for tag in tags_from_html('xbrli:context', html):
             text = ''
             members = []
@@ -113,7 +160,7 @@ class XbrliDocument:
         return contexts
     
     def _ix_fields_from_html(self, html):
-        ix_fields = {}   # name (context description): [text]
+        ix_fields = OrderedDict()   # name (context description): [text]
         for ix_name in ('ix:nonNumeric', 'ix:nonFraction'):
             for tag in tags_from_html(ix_name, html):
                 try:
@@ -133,16 +180,19 @@ class XbrliDocument:
         return ix_fields
 
 
+# In[53]:
+
+
 def main(paths=None):
     ''' For development, pass a list of paths and urls will be skipped. '''
-    fields = {}
+    fields = OrderedDict()
     try:
         fields = config_fields()
         print(f'Config file (config.csv) found.')
     except:
         print(f'Config file (config.csv) not found, will output all fields as found in documents.')
 
-    data = {}
+    data = OrderedDict()
     docs = []
     
     if paths:
@@ -176,14 +226,14 @@ def main(paths=None):
     if fields:
         data = configure_data(data, fields)
 
-    # Use Pandas to turn data dictionary into Excel
-    df = pd.DataFrame(data=data, dtype=int)
-    xlWriter = pd.ExcelWriter('output.xlsx', engine='xlsxwriter',options={'strings_to_numbers': True})
-    df.to_excel(xlWriter, index=False, sheet_name='CAFR Data')
+    # Use Pandas to turn data dictionary into csv.
+    df = pd.DataFrame(data)
+    df.to_excel('output.xlsx', index=False)
 
-    print(f"Processed data for {len(urls)} entities, with a total of {len(data)} fields. See output.xlsx.")
+    print(f"Processed data for {len(docs)} entities, wrote out {len(data)} fields. See output.xlsx.")
 
-# In[34]:
+
+# In[54]:
 
 
 def test():
@@ -191,8 +241,12 @@ def test():
     from pathlib import Path
     
     paths = [str(path) for path in Path('test_data').iterdir()]
-    main()
-    #main(paths)
-	
+    main(paths)
+
+
+# In[55]:
+
+
 #main()
 test()
+
