@@ -100,7 +100,7 @@ def to_numeric(iterable, downcast='signed'):
 # In[27]:
 
 
-help(pd.to_numeric)
+# help(pd.to_numeric)
 
 
 # In[22]:
