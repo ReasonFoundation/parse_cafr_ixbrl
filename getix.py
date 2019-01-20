@@ -84,6 +84,25 @@ def configure_data(data, fields):
     return configured
 
 
+# In[38]:
+
+
+def to_numeric(iterable, downcast='signed'):
+    ''' Fixes up problems with converting strings to numbers, then uses pd.to_numeric() to do the conversion. '''
+    for index, item in enumerate(iterable):
+        if isinstance(item, str):
+            # Numeric conversions can't handle commas.
+            new_item = item.replace(',', '')
+            iterable[index] = new_item
+    return pd.to_numeric(iterable, downcast=downcast)
+
+
+# In[27]:
+
+
+help(pd.to_numeric)
+
+
 # In[22]:
 
 
@@ -191,7 +210,7 @@ class XbrliDocument:
         return ix_fields
 
 
-# In[24]:
+# In[55]:
 
 
 def main(paths=None):
@@ -246,17 +265,16 @@ def main(paths=None):
     # Use Pandas to turn data dictionary into csv.
     df = pd.DataFrame(data)
     
-    # NOW: Have to pull commas out of numbers to convert them (sigh). Good Series practice!
-    # NOW: A workaround is to go back to writing out csv, then things get properly read in as numbers.
-    # TODO: Hack to get numeric data saved as numbers rather than strings.
-    # TODO: Probably want the config file to specify the column format, then need to handle non-conforming data
-    #for col in df.columns[3:]:                  # UPDATE ONLY NUMERIC COLS 
-        #df.loc[df[col] == '-', col] = np.nan    # REPLACE HYPHEN WITH NaNs
-        #df[col] = df[col].astype(int)         # CONVERT TO INT (handle float later?)   
+    # DEBUG: This is a hack assuming which columns are numeric.
+    # TODO: Probably want the config file to specify the column format.
+    # Not slicing here to avoid potential complications (http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy)
+    for col in df.columns[5:]:
+        df[col] = to_numeric(df[col])
 
+    df.to_csv('output.csv', index=False)
     df.to_excel('output.xlsx', index=False)
 
-    print(f"Processed data for {len(docs)} entities, wrote out {len(data)} fields. See output.xlsx.")
+    print(f"Processed data for {len(docs)} entities, wrote out {len(data)} fields. See output.xlsx and output.csv.")
 
 
 # In[25]:
@@ -270,7 +288,7 @@ def test():
     main(paths)
 
 
-# In[26]:
+# In[56]:
 
 
 #main()
