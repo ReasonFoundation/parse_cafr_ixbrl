@@ -4,6 +4,10 @@ State,cafr:NameOfState
 Fiscal Year End,cafr:FiscalEndDate
 Audit Opinion,cafr:AuditOpinion
 Audit Firm,cafr:NameOfAuditFirm
+Cash and Cash Equivalents - Governmental Activities,cafr:CashAndCashEquivalents (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
+Cash and Cash Equivalents - Governmental Activities,cafr:CashAndCashEquivalents (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember cafr:UnrestrictedAssetOrLiabilityMember)	71
+Cash and Cash Equivalents - Governmental Activities,cafr:CashAndCashEquivalents (c_GovernmentalActivities_AsOf30Jun2018)
+Cash and Cash Equivalents - Governmental Activities,cafr:CashAndCashEquivalents (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
 Liabilities - Governmental Activities, cafr:Liabilities (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
 Net Position - Governmental Activities,cafr:NetPosition (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
 Unrestricted Net Position - Governmental Activities,cafr:NetPositionUnrestricted (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
@@ -12,3 +16,10 @@ Operating Grants And Contributions - Governmental Activities,cafr:OperatingGrant
 Capital Grants And Contributions - Governmental Activities,cafr:CapitalGrantsAndContributions (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
 Expenses - Governmental Activities,cafr:Expenses (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
 Change In Net Position - Governmental Activities,cafr:ChangeInNetPosition (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
+Nonspendable General Fund Balance,cafr:NonspendableFundBalance (cafr:GeneralFundMember cafr:GovernmentalTypeActivityMember cafr:MajorMember cafr:ModifiedAccrualBasisOfAccountingMember cafr:PrimaryGovernmentActivitiesMember)
+Committed General Fund Balance,cafr:CommittedFundBalance (cafr:GeneralFundMember cafr:GovernmentalTypeActivityMember cafr:MajorMember cafr:ModifiedAccrualBasisOfAccountingMember cafr:PrimaryGovernmentActivitiesMember)
+Assigned General Fund Balance,cafr:AssignedFundBalance (cafr:GeneralFundMember cafr:GovernmentalTypeActivityMember cafr:MajorMember cafr:ModifiedAccrualBasisOfAccountingMember cafr:PrimaryGovernmentActivitiesMember)
+Unassigned General Fund Balance,cafr:UnassignedFundBalance (cafr:GeneralFundMember cafr:GovernmentalTypeActivityMember cafr:MajorMember cafr:ModifiedAccrualBasisOfAccountingMember cafr:PrimaryGovernmentActivitiesMember)
+Total General Fund Balance,cafr:TotalFundBalance (cafr:GeneralFundMember cafr:GovernmentalTypeActivityMember cafr:MajorMember cafr:ModifiedAccrualBasisOfAccountingMember cafr:PrimaryGovernmentActivitiesMember)
+General Fund Revenues,cafr:Revenues (cafr:GeneralFundMember cafr:GovernmentalTypeActivityMember cafr:MajorMember cafr:ModifiedAccrualBasisOfAccountingMember cafr:PrimaryGovernmentActivitiesMember)
+General Fund Expenditures,cafr:Expenditures (cafr:GeneralFundMember cafr:GovernmentalTypeActivityMember cafr:MajorMember cafr:ModifiedAccrualBasisOfAccountingMember cafr:PrimaryGovernmentActivitiesMember)
