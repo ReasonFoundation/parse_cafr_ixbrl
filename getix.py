@@ -13,7 +13,7 @@
 #             'https://xbrlus.github.io/cafr/samples/2/VABeach_StmtNetPos_iXBRL_20190116.htm',
 #             'https://xbrlus.github.io/cafr/samples/7/ut-20190117.htm']
 
-# In[18]:
+# In[10]:
 
 
 urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm',
@@ -28,12 +28,9 @@ urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm'
 # ## Libraries
 # **BeautifulSoup**: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
 
-# In[19]:
+# In[11]:
 
 
-import requests
-from pandas import Series, DataFrame
-import pandas as pd
 import re
 
 # In Python 3.7, dict is automatically ordered, but to allow for people using previous versions,
@@ -41,69 +38,7 @@ import re
 from collections import OrderedDict
 
 
-# In[20]:
-
-
-def config_fields(path = 'config.csv'):
-    ''' 
-    If the config CSV file exists, it is used to determine what to output.
-    If config file doesn't exist, raises exception.
-    
-    CSV Format:
-    
-    Output Field Name,Input Field Names (a;b;c)
-    Document Title,cafr:DocumentTitle
-    
-    Returns a dictionary with the output field name as the key and a list of input fields as the value.
-    
-    {'Document Title': ['cafr:DocumentTitle'],
-     'Name of Government': ['cafr:NameOfGovernment']}
-    '''
-    df = pd.read_csv(path)
-    fields = OrderedDict()
-    for row in df.itertuples(index=False):
-        fields[row[0]] = row[1].split(';')
-    return fields
-
-
-# In[21]:
-
-
-def configure_data(data, fields):
-    ''' Given a dictionary of data and a dictionary of configuration info, returns dictionary conforming to the configuration. '''
-    configured = OrderedDict()
-
-    # Determine how many entries each column must have, for missing fields.
-    #row_count = len(data.values[0])
-    
-    # TODO: Support multiple input fields -- need more info on what should happen.
-    for name, input_fields in fields.items():
-        for field in input_fields:
-            if field in data:
-                configured[name] = data[field]
-    return configured
-
-
-# In[38]:
-
-
-def to_numeric(iterable, downcast='signed'):
-    ''' Fixes up problems with converting strings to numbers, then uses pd.to_numeric() to do the conversion. '''
-    for index, item in enumerate(iterable):
-        if isinstance(item, str):
-            # Numeric conversions can't handle commas.
-            new_item = item.replace(',', '')
-            iterable[index] = new_item
-    return pd.to_numeric(iterable, downcast=downcast)
-
-
-# In[27]:
-
-
-# help(pd.to_numeric)
-
-
-# In[22]:
+# In[16]:
 
 
 # This is a quick hack replacement for BeautifulSoup, to work around whatever problem we're having there.
@@ -145,13 +80,15 @@ def tags_from_html(name, html):
 # 
 #         <td id="_NETPOSITION_B10" style="text-align:right;width:114px;">$&#160;&#160;&#160;&#160;&#160;&#160;&#160;<ix:nonFraction name="cafr:CashAndCashEquivalents" contextRef="_ctx3" id="NETPOSITION_B10" unitRef="ISO4217_USD" decimals = "0" format="ixt:numdotdecimal">336,089,928</ix:nonFraction>&#160;</td>
 
-# In[23]:
+# In[17]:
 
 
 class XbrliDocument:
+    import requests
+
     def __init__(self, path = None, url = None):
         if path:
-            with open(path,'r',encoding='latin1') as source:
+            with open(path,'r') as source:
                 try:
                     html = source.read()
                 except Exception as e:
@@ -210,74 +147,149 @@ class XbrliDocument:
         return ix_fields
 
 
-# In[55]:
+# In[67]:
 
 
-def main(paths=None):
-    ''' For development, pass a list of paths and urls will be skipped. '''
-    fields = OrderedDict()
-    try:
-        fields = config_fields()
-        print(f'Config file (config.csv) found.')
-    except:
-        print(f'Config file (config.csv) not found, will output all fields as found in documents.')
-
-    data = OrderedDict()
-    docs = []
+class SummarySpreadsheet:
+    from pandas import Series, DataFrame
+    import pandas as pd
+    import numpy as np
     
-    if paths:
+    def __init__(self, paths = [], urls = [], config_path = 'config.csv'):
+        self.paths = paths
+        self.urls = urls
+        self.config_path = config_path
+        self.docs = []
+        self._dataframe = None       # The actual data parsed from the documents.
+        self._output_fields = None   # Controlled by config.csv.
+        
+        # Load all specified documents.
         for path in paths:
             print(f'Loading {path}...')
             try:
                 doc = XbrliDocument(path=path)
-                docs.append(doc)
+                self.docs.append(doc)
             except:
                 pass
-    else:
+
         for url in urls:
             print(f'Downloading {url}...')
             try:
                 doc = XbrliDocument(url=url)
-                docs.append(doc)
+                self.docs.append(doc)
             except:
                 pass
 
-    # Because docs can have missing fields, and for the spreadsheet all docs must have entries for all fields,
-    # first need to figure out what all the fields from all the docs are, before processing the data.
-    for doc in docs:
-        for key in doc.ix_fields:
-            data.setdefault(key, [])
+    def to_csv(self, path='output.csv'):
+        self.dataframe.to_csv(path, index=False)
 
-    # Now can process the docs.
-    for doc in docs:
-        for key, value in doc.ix_fields.items():
-            data_list = data.setdefault(key, [])
-            data_list.append(value)
+    def to_excel(self, path='output.xlsx'):
+        # To have numbers not be treated as strings in the Excel file, have to specify the type of the column.
+        # Easy approach is to just try turning each column into a numeric column and see if it works
+        # (it will fail if any value is not a number).
+        df = self.dataframe
+        for col in df.columns:
+            try:
+                df[col] = self._to_numeric(df[col])
+            except:
+                pass
+        df.to_excel(path, index=False)
 
-        # And finally add blank entries for any missing fields.
-        for key, value in data.items():
-            if key not in doc.ix_fields:
-                value.append('')
+    @property
+    def dataframe(self):
+        if self._dataframe is not None: return self._dataframe
+
+        # Build up data dictionary to become DataFrame.
+        sheet_data = {}
+        
+        # For each output field, go through each doc and get the value based on input fields
+        for output_name, input_names in self.output_fields.items():
+            values = []
+            for doc in self.docs:
+                for name in input_names:
+                    value_found = False
+                    if name in doc.ix_fields:
+                        values.append(doc.ix_fields[name])
+                        value_found = True
+                        break
+                    
+                # If no value for this output field, need an empty value.
+                if not value_found:
+                    values.append('')
+            sheet_data[output_name] = values
+         
+        self._dataframe = DataFrame(sheet_data)
+        return self._dataframe
+
+    @property
+    def output_fields(self):
+        ''' 
+        If the config CSV file exists, it is used to determine what to output.
+        If config file doesn't exist, uses all fields specified in the docs.
+
+        CSV Format:
+
+        Output Field Name,Input Field Name
+        Document Title,cafr:DocumentTitle
+
+        The same Output Field Name can be used multiple times, 
+        to allow multiple Input Field Names tied to the same output name.
+        In that case, only the first matching Input Field Name will be used for a document.
+
+        Returns a dictionary with the output field name as the key and a list of input fields as the value.
+
+        {'Document Title': ['cafr:DocumentTitle'],
+         'Name of Government': ['cafr:NameOfGovernment']}
+        '''
+        if self._output_fields: return self._output_fields
+        
+        self._output_fields = OrderedDict()
+        try:
+            df = pd.read_csv(self.config_path)
+            for output_name, input_name in df.itertuples(index=False):
+                inputs = self._output_fields.setdefault(output_name, [])
+                inputs.append(input_name)
+        except FileNotFoundError:
+            for doc in self.docs:
+                for key in doc.ix_fields:
+                    if key not in self._output_fields:
+                        # The input names list in this case just uses the key name.
+                        self._output_fields[key] = [key]
+        return self._output_fields
     
-    if fields:
-        data = configure_data(data, fields)
+    def _to_numeric(self, iterable, downcast='signed'):
+        ''' Fixes up problems with converting strings to numbers, then uses pd.to_numeric() to do the conversion. 
+        Raises exception if all values are not numeric. '''
+        converted = []
+        for index, item in enumerate(iterable):
+            if isinstance(item, str):
+                # Numeric conversions can't handle commas.
+                item = item.replace(',', '')
+                
+                # Empty string will fail to convert, so turn it into NotANumber...
+                if item == '': item = np.nan
+            converted.append(item)
+        return pd.to_numeric(converted, downcast=downcast)
 
-    # Use Pandas to turn data dictionary into csv.
-    df = pd.DataFrame(data)
+
+# In[44]:
+
+
+def main(paths=None):
+    ''' For development, pass a list of paths and urls will be skipped. '''
+    if paths:
+        spreadsheet = SummarySpreadsheet(paths=paths)
+    else:
+        spreadsheet = SummarySpreadsheet(urls=urls)
+        
+    spreadsheet.to_csv()
+    print('Generated output.csv.')
     
-    # DEBUG: This is a hack assuming which columns are numeric.
-    # TODO: Probably want the config file to specify the column format.
-    # Not slicing here to avoid potential complications (http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy)
-    for col in df.columns[5:]:
-        df[col] = to_numeric(df[col])
-
-    df.to_csv('output.csv', index=False)
-    df.to_excel('output.xlsx', index=False)
-
-    print(f"Processed data for {len(docs)} entities, wrote out {len(data)} fields. See output.xlsx and output.csv.")
+    spreadsheet.to_excel()
+    print('Generated output.xlsx')
 
 
-# In[25]:
+# In[19]:
 
 
 def test():
@@ -288,7 +300,7 @@ def test():
     main(paths)
 
 
-# In[56]:
+# In[70]:
 
 
 #main()
