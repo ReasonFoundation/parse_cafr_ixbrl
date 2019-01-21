@@ -5,7 +5,7 @@ Fiscal Year End,cafr:FiscalEndDate
 Audit Opinion,cafr:AuditOpinion
 Audit Firm,cafr:NameOfAuditFirm
 Cash and Cash Equivalents - Governmental Activities,cafr:CashAndCashEquivalents (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
-Cash and Cash Equivalents - Governmental Activities,cafr:CashAndCashEquivalents (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember cafr:UnrestrictedAssetOrLiabilityMember)	71
+Cash and Cash Equivalents - Governmental Activities,cafr:CashAndCashEquivalents (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember cafr:UnrestrictedAssetOrLiabilityMember)
 Cash and Cash Equivalents - Governmental Activities,cafr:CashAndCashEquivalents (c_GovernmentalActivities_AsOf30Jun2018)
 Cash and Cash Equivalents - Governmental Activities,cafr:CashAndCashEquivalents (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
 Liabilities - Governmental Activities, cafr:Liabilities (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
