@@ -13,7 +13,7 @@
 #             'https://xbrlus.github.io/cafr/samples/2/VABeach_StmtNetPos_iXBRL_20190116.htm',
 #             'https://xbrlus.github.io/cafr/samples/7/ut-20190117.htm']
 
-# In[10]:
+# In[11]:
 
 
 urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm',
@@ -28,10 +28,11 @@ urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm'
 # ## Libraries
 # **BeautifulSoup**: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
 
-# In[11]:
+# In[12]:
 
 
 import re
+import requests
 from pandas import Series, DataFrame
 import pandas as pd
 import numpy as np
@@ -41,7 +42,7 @@ import numpy as np
 from collections import OrderedDict
 
 
-# In[16]:
+# In[13]:
 
 
 # This is a quick hack replacement for BeautifulSoup, to work around whatever problem we're having there.
@@ -83,12 +84,10 @@ def tags_from_html(name, html):
 # 
 #         <td id="_NETPOSITION_B10" style="text-align:right;width:114px;">$&#160;&#160;&#160;&#160;&#160;&#160;&#160;<ix:nonFraction name="cafr:CashAndCashEquivalents" contextRef="_ctx3" id="NETPOSITION_B10" unitRef="ISO4217_USD" decimals = "0" format="ixt:numdotdecimal">336,089,928</ix:nonFraction>&#160;</td>
 
-# In[17]:
+# In[14]:
 
 
 class XbrliDocument:
-    import requests
-
     def __init__(self, path = None, url = None):
         if path:
             with open(path,'r') as source:
@@ -150,11 +149,10 @@ class XbrliDocument:
         return ix_fields
 
 
-# In[67]:
+# In[15]:
 
 
-class SummarySpreadsheet:
-    
+class SummarySpreadsheet:    
     def __init__(self, paths = [], urls = [], config_path = 'config.csv'):
         self.paths = paths
         self.urls = urls
@@ -200,7 +198,7 @@ class SummarySpreadsheet:
         if self._dataframe is not None: return self._dataframe
 
         # Build up data dictionary to become DataFrame.
-        sheet_data = {}
+        sheet_data = OrderedDict()
         
         # For each output field, go through each doc and get the value based on input fields
         for output_name, input_names in self.output_fields.items():
@@ -272,7 +270,7 @@ class SummarySpreadsheet:
         return pd.to_numeric(converted, downcast=downcast)
 
 
-# In[44]:
+# In[16]:
 
 
 def main(paths=None):
@@ -289,7 +287,7 @@ def main(paths=None):
     print('Generated output.xlsx')
 
 
-# In[19]:
+# In[17]:
 
 
 def test():
@@ -300,7 +298,7 @@ def test():
     main(paths)
 
 
-# In[70]:
+# In[18]:
 
 
 #main()
