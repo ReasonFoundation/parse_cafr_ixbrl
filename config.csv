@@ -9,7 +9,7 @@ Cash and Cash Equivalents - Governmental Activities,cafr:CashAndCashEquivalents 
 Cash and Cash Equivalents - Governmental Activities,cafr:CashAndCashEquivalents (c_GovernmentalActivities_AsOf30Jun2018)
 Cash and Cash Equivalents - Governmental Activities,cafr:CashAndCashEquivalents (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
 Cash and Cash Equivalents - Governmental Activities,cafr:CashAndCashEquivalents (cafr:AccrualBasisOfAccountingMember cafr:CurrentMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
-Liabilities - Governmental Activities, cafr:Liabilities (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
+Liabilities - Governmental Activities,cafr:Liabilities (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
 Net Position - Governmental Activities,cafr:NetPosition (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
 Unrestricted Net Position - Governmental Activities,cafr:NetPositionUnrestricted (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
 Charges for Services - Governmental Activities,cafr:ChargesForServices (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
