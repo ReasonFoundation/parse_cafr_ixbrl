@@ -13,7 +13,7 @@
 #             'https://xbrlus.github.io/cafr/samples/2/VABeach_StmtNetPos_iXBRL_20190116.htm',
 #             'https://xbrlus.github.io/cafr/samples/7/ut-20190117.htm']
 
-# In[11]:
+# In[122]:
 
 
 urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm',
@@ -28,7 +28,7 @@ urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm'
 # ## Libraries
 # **BeautifulSoup**: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
 
-# In[12]:
+# In[123]:
 
 
 import re
@@ -42,7 +42,7 @@ import numpy as np
 from collections import OrderedDict
 
 
-# In[13]:
+# In[124]:
 
 
 # This is a quick hack replacement for BeautifulSoup, to work around whatever problem we're having there.
@@ -84,7 +84,7 @@ def tags_from_html(name, html):
 # 
 #         <td id="_NETPOSITION_B10" style="text-align:right;width:114px;">$&#160;&#160;&#160;&#160;&#160;&#160;&#160;<ix:nonFraction name="cafr:CashAndCashEquivalents" contextRef="_ctx3" id="NETPOSITION_B10" unitRef="ISO4217_USD" decimals = "0" format="ixt:numdotdecimal">336,089,928</ix:nonFraction>&#160;</td>
 
-# In[14]:
+# In[166]:
 
 
 class XbrliDocument:
@@ -105,6 +105,7 @@ class XbrliDocument:
         else:
             raise Exception("Need a path or url argument!")
         
+        self.path = path
         self.contexts = self._contexts_from_html(html)
         self.ix_fields = self._ix_fields_from_html(html)
     
@@ -116,11 +117,11 @@ class XbrliDocument:
             for member in tags_from_html('xbrldi:explicitMember', tag['content']):
                 try:
                     members.append(member['content'])
-                    members.sort()
                 except:
                     pass
+            members.sort()
             text += ' '.join(members)    
-            contexts[tag['attributes']['id']] = text 
+            contexts[tag['attributes']['id']] = text
         return contexts
     
     def _ix_fields_from_html(self, html):
@@ -142,14 +143,18 @@ class XbrliDocument:
                     name = tag['attributes']['name']
                     text = tag['content']
 
-                    ix_fields[f'{name}{description}'] = text 
+                    ix_fields[f'{name}{description}'] = text
+                    
+                    # DEBUG:
+                    #if 'cafr:Capital' in name:
+                    #    print(f'*** DEBUG: {self.path}: {name}{description}: {text}')
                 except Exception as e:
                     print(f"*** Exception: {type(e)}: {e}")
                     print(tag)
         return ix_fields
 
 
-# In[15]:
+# In[126]:
 
 
 class SummarySpreadsheet:    
@@ -270,7 +275,7 @@ class SummarySpreadsheet:
         return pd.to_numeric(converted, downcast=downcast)
 
 
-# In[16]:
+# In[127]:
 
 
 def main(paths=None):
@@ -287,7 +292,7 @@ def main(paths=None):
     print('Generated output.xlsx')
 
 
-# In[17]:
+# In[128]:
 
 
 def test():
@@ -298,7 +303,7 @@ def test():
     main(paths)
 
 
-# In[18]:
+# In[167]:
 
 
 #main()
