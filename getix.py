@@ -178,7 +178,7 @@ class SummarySpreadsheet:
     def to_csv(self, path='output.csv'):
         self.dataframe.to_csv(path, index=False)
 
-    def to_excel(self, path='output.xlsx', number_format='#,##0', col_width=45):
+    def to_excel(self, path='output.xlsx', number_format='#,##0', col_width=45, freeze_cols=3):
         # To have numbers not be treated as strings in the Excel file, have to specify the type of the column.
         # Easy approach is to just try turning each column into a numeric column and see if it works
         # (it will fail if any value is not a number).
@@ -202,6 +202,15 @@ class SummarySpreadsheet:
         num_format = workbook.add_format({'num_format': number_format})
         worksheet.set_column(0, len(self.output_fields)-1, col_width, num_format)
 
+        # Freeze the specified number of columns.
+        if freeze_cols:
+            worksheet.freeze_panes(0, freeze_cols)
+
+        # TODO: Add at the right the following calculation:  
+        #       General Fund Balance / General Fund Expenditure with the title General Fund Balance Ratio.  
+        #       The formula would be S2 / V2 where 2 is replaced by the row number.  
+        #       It would be great to use a yellow background
+        
         # Close the Pandas Excel writer and output the Excel file.
         writer.save()       
 
@@ -271,7 +280,7 @@ class SummarySpreadsheet:
         ''' Fixes up problems with converting strings to numbers, then uses pd.to_numeric() to do the conversion. 
         Raises exception if all values are not numeric. '''
         converted = []
-        for index, item in enumerate(iterable):
+        for item in iterable:
             if isinstance(item, str):
                 # Numeric conversions can't handle commas.
                 item = item.replace(',', '')
