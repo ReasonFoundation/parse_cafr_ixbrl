@@ -32,6 +32,9 @@ urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm'
 
 
 import re
+from pandas import Series, DataFrame
+import pandas as pd
+import numpy as np
 
 # In Python 3.7, dict is automatically ordered, but to allow for people using previous versions,
 # need to use an OrderedDict or the results will be messy.
@@ -151,9 +154,6 @@ class XbrliDocument:
 
 
 class SummarySpreadsheet:
-    from pandas import Series, DataFrame
-    import pandas as pd
-    import numpy as np
     
     def __init__(self, paths = [], urls = [], config_path = 'config.csv'):
         self.paths = paths
