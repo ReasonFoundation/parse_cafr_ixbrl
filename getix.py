@@ -90,7 +90,7 @@ def tags_from_html(name, html):
 class XbrliDocument:
     def __init__(self, path = None, url = None):
         if path:
-            with open(path,'r') as source:
+            with open(path,'r',encoding='latin1') as source:
                 try:
                     html = source.read()
                 except Exception as e:
