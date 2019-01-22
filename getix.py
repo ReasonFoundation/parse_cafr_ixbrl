@@ -5,15 +5,7 @@
 # URLs that take too long to return data:
 # - https://xbrlus.github.io/cafr/samples/8/va-c-bris-20160630.xhtml
 
-#     urls = ['https://xbrlus.github.io/cafr/samples/10/va-o-albe-20170630.xhtml',
-#             'https://xbrlus.github.io/cafr/samples/9/va-t-ashl-20170630.xhtml', 
-#             'https://xbrlus.github.io/cafr/samples/8/va-c-bris-20160630.xhtml',
-#             'https://xbrlus.github.io/cafr/samples/6/ga-20190116.htm',
-#             'https://xbrlus.github.io/cafr/samples/1/StPete_StmtNetPos_iXBRL_20190116.htm',
-#             'https://xbrlus.github.io/cafr/samples/2/VABeach_StmtNetPos_iXBRL_20190116.htm',
-#             'https://xbrlus.github.io/cafr/samples/7/ut-20190117.htm']
-
-# In[122]:
+# In[1]:
 
 
 urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm',
@@ -28,7 +20,7 @@ urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm'
 # ## Libraries
 # **BeautifulSoup**: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
 
-# In[123]:
+# In[2]:
 
 
 import re
@@ -42,7 +34,7 @@ import numpy as np
 from collections import OrderedDict
 
 
-# In[124]:
+# In[3]:
 
 
 # This is a quick hack replacement for BeautifulSoup, to work around whatever problem we're having there.
@@ -84,13 +76,13 @@ def tags_from_html(name, html):
 # 
 #         <td id="_NETPOSITION_B10" style="text-align:right;width:114px;">$&#160;&#160;&#160;&#160;&#160;&#160;&#160;<ix:nonFraction name="cafr:CashAndCashEquivalents" contextRef="_ctx3" id="NETPOSITION_B10" unitRef="ISO4217_USD" decimals = "0" format="ixt:numdotdecimal">336,089,928</ix:nonFraction>&#160;</td>
 
-# In[166]:
+# In[4]:
 
 
 class XbrliDocument:
     def __init__(self, path = None, url = None):
         if path:
-            with open(path,'r',encoding='latin1') as source:
+            with open(path,'r', encoding='latin1') as source:
                 try:
                     html = source.read()
                 except Exception as e:
@@ -146,7 +138,7 @@ class XbrliDocument:
                     ix_fields[f'{name}{description}'] = text
                     
                     # DEBUG:
-                    #if 'cafr:Capital' in name:
+                    #if 'cafr:Revenues' in name:
                     #    print(f'*** DEBUG: {self.path}: {name}{description}: {text}')
                 except Exception as e:
                     print(f"*** Exception: {type(e)}: {e}")
@@ -154,7 +146,7 @@ class XbrliDocument:
         return ix_fields
 
 
-# In[126]:
+# In[5]:
 
 
 class SummarySpreadsheet:    
@@ -186,7 +178,7 @@ class SummarySpreadsheet:
     def to_csv(self, path='output.csv'):
         self.dataframe.to_csv(path, index=False)
 
-    def to_excel(self, path='output.xlsx'):
+    def to_excel(self, path='output.xlsx', number_format='#,##0', col_width=45):
         # To have numbers not be treated as strings in the Excel file, have to specify the type of the column.
         # Easy approach is to just try turning each column into a numeric column and see if it works
         # (it will fail if any value is not a number).
@@ -196,7 +188,22 @@ class SummarySpreadsheet:
                 df[col] = self._to_numeric(df[col])
             except:
                 pass
-        df.to_excel(path, index=False)
+            
+        # Add number formatting to the Excel file.
+        # https://xlsxwriter.readthedocs.io/example_pandas_column_formats.html
+        
+        # Create a Pandas Excel writer using XlsxWriter as the engine.
+        writer = pd.ExcelWriter(path, engine='xlsxwriter')
+        df.to_excel(writer, sheet_name='Sheet1', index=False)
+        workbook  = writer.book
+        worksheet = writer.sheets['Sheet1']
+        
+        # Apply column width and number format to all columns.
+        num_format = workbook.add_format({'num_format': number_format})
+        worksheet.set_column(0, len(self.output_fields)-1, col_width, num_format)
+
+        # Close the Pandas Excel writer and output the Excel file.
+        writer.save()       
 
     @property
     def dataframe(self):
@@ -275,7 +282,7 @@ class SummarySpreadsheet:
         return pd.to_numeric(converted, downcast=downcast)
 
 
-# In[127]:
+# In[6]:
 
 
 def main(paths=None):
@@ -292,7 +299,7 @@ def main(paths=None):
     print('Generated output.xlsx')
 
 
-# In[128]:
+# In[7]:
 
 
 def test():
@@ -303,7 +310,7 @@ def test():
     main(paths)
 
 
-# In[167]:
+# In[8]:
 
 
 #main()
