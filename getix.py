@@ -183,6 +183,10 @@ class SummarySpreadsheet:
         # Easy approach is to just try turning each column into a numeric column and see if it works
         # (it will fail if any value is not a number).
         df = self.dataframe
+
+        num_cols = len(self.output_fields)
+        num_rows = len(df)
+
         for col in df.columns:
             try:
                 df[col] = self._to_numeric(df[col])
@@ -197,19 +201,26 @@ class SummarySpreadsheet:
         df.to_excel(writer, sheet_name='Sheet1', index=False)
         workbook  = writer.book
         worksheet = writer.sheets['Sheet1']
+
+        # Add at the right the following calculation:  
+        #    General Fund Balance / General Fund Expenditure with the title General Fund Balance Ratio.  
+        #    The formula would be S2 / U2 where 2 is replaced by the row number.  
+        col_index = num_cols
+        header_format = workbook.add_format({'align': 'center', 'bold': True, 'bg_color':'yellow', 'bottom':True, 'left':True, 'right':True})
+        worksheet.write(0, col_index, 'General Fund Balance Ratio', header_format)
+        
+        formula_format = workbook.add_format({'bg_color':'yellow', 'num_format': '0.00'})
+        for row_index in range(1,num_rows+1):
+            # Excel indexes are 1-based.
+            worksheet.write(row_index, col_index, f'=S{row_index+1} / U{row_index+1}', formula_format)
         
         # Apply column width and number format to all columns.
         num_format = workbook.add_format({'num_format': number_format})
-        worksheet.set_column(0, len(self.output_fields)-1, col_width, num_format)
+        worksheet.set_column(0, num_cols, col_width, num_format)
 
         # Freeze the specified number of columns.
         if freeze_cols:
             worksheet.freeze_panes(0, freeze_cols)
-
-        # TODO: Add at the right the following calculation:  
-        #       General Fund Balance / General Fund Expenditure with the title General Fund Balance Ratio.  
-        #       The formula would be S2 / V2 where 2 is replaced by the row number.  
-        #       It would be great to use a yellow background
         
         # Close the Pandas Excel writer and output the Excel file.
         writer.save()       
