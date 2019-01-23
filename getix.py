@@ -1,7 +1,19 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# ## Urls to parse
+# # getix
+# This script is an in-progress effort to make it easy to parse iXBRL files and generate spreadsheet output (Excel and CSV).
+# 
+# It's currently a proof of concept, and the Excel output assumes the tags currently listed in config.csv. The CSV output is more resilient. The next step is making the script more robust and flexible.
+# 
+# The ``getix.ipynb`` file is considered the source (it's a [Jupyter Notebook](https://jupyter.org)), and ``getix.py`` is derived from that. You can run the script using either file, though for the .ipynb file you need to install Jupyter and run the ``jupyter notebook`` command.
+
+# ## Resources
+# - [iXBRL spec](https://specifications.xbrl.org/work-product-index-inline-xbrl-inline-xbrl-1.1.html)
+# - [XBRL - Wikipedia](https://en.wikipedia.org/wiki/XBRL)
+# 
+
+# ## Urls containing sample iXBRL docs
 # URLs that take too long to return data:
 # - https://xbrlus.github.io/cafr/samples/8/va-c-bris-20160630.xhtml
 
