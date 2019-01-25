@@ -9,7 +9,9 @@
 # The ``getix.ipynb`` file is considered the source (it's a [Jupyter Notebook](https://jupyter.org)), and ``getix.py`` is derived from that. You can run the script using either file, though for the .ipynb file you need to install Jupyter and run the ``jupyter notebook`` command.
 
 # ## Resources
-# - [iXBRL spec](https://specifications.xbrl.org/work-product-index-inline-xbrl-inline-xbrl-1.1.html)
+# - [iXBRL spec](docs/IXBRL%20Spec%201.1.html) ([web location](https://specifications.xbrl.org/work-product-index-inline-xbrl-inline-xbrl-1.1.html))
+# - [iXBRL schema](docs/IXBRL%20Schema%201.1.html) ([web location](http://www.xbrl.org/specification/inlinexbrl-part2/rec-2013-11-18/inlinexbrl-part2-rec-2013-11-18.html))
+# - [iXBRL primer](docs/IXBRL%20Primer%201.1.html) ([web location](http://www.xbrl.org/WGN/inlineXBRL-part0/WGN-2015-12-09/inlineXBRL-part0-WGN-2015-12-09.html))
 # - [XBRL - Wikipedia](https://en.wikipedia.org/wiki/XBRL)
 # 
 
@@ -17,7 +19,7 @@
 # URLs that take too long to return data:
 # - https://xbrlus.github.io/cafr/samples/8/va-c-bris-20160630.xhtml
 
-# In[1]:
+# In[9]:
 
 
 urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm',
@@ -32,11 +34,12 @@ urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm'
 # ## Libraries
 # **BeautifulSoup**: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
 
-# In[2]:
+# In[10]:
 
 
 import re
 import requests
+from bs4 import BeautifulSoup
 from pandas import Series, DataFrame
 import pandas as pd
 import numpy as np
@@ -44,27 +47,6 @@ import numpy as np
 # In Python 3.7, dict is automatically ordered, but to allow for people using previous versions,
 # need to use an OrderedDict or the results will be messy.
 from collections import OrderedDict
-
-
-# In[3]:
-
-
-# This is a quick hack replacement for BeautifulSoup, to work around whatever problem we're having there.
-def tags_from_html(name, html):
-    tags = []
-    results = re.findall(f'(<\s*{name}.*?>(.*?)<\s*/\s*{name}>)', html, flags = re.DOTALL | re.MULTILINE)
-    
-    for element, content in results:
-        tag = {'name': name}
-        tag['content'] = content
-        
-        atts = OrderedDict()
-        att_results = re.findall(f'(\S+)=["\']?((?:.(?!["\']?\s+(?:\S+)=|[>"\']))+.)["\']?', element)
-        for att, value in att_results:
-            atts[att.lower()] = value   # Lower-casing attribute name to avoid case errors in the HTML.
-        tag['attributes'] = atts
-        tags.append(tag)
-    return tags
 
 
 # ## Context definitions
@@ -88,7 +70,7 @@ def tags_from_html(name, html):
 # 
 #         <td id="_NETPOSITION_B10" style="text-align:right;width:114px;">$&#160;&#160;&#160;&#160;&#160;&#160;&#160;<ix:nonFraction name="cafr:CashAndCashEquivalents" contextRef="_ctx3" id="NETPOSITION_B10" unitRef="ISO4217_USD" decimals = "0" format="ixt:numdotdecimal">336,089,928</ix:nonFraction>&#160;</td>
 
-# In[4]:
+# In[11]:
 
 
 class XbrliDocument:
@@ -110,55 +92,63 @@ class XbrliDocument:
             raise Exception("Need a path or url argument!")
         
         self.path = path
-        self.contexts = self._contexts_from_html(html)
-        self.ix_fields = self._ix_fields_from_html(html)
+        
+        soup = BeautifulSoup(html, parser='lxml')
+        self.contexts = self._contexts_from_html(soup)
+        self.ix_fields = self._ix_fields_from_html(soup)
     
-    def _contexts_from_html(self, html):
+    def _contexts_from_html(self, soup):
         contexts = OrderedDict()   # id: text description
-        for tag in tags_from_html('xbrli:context', html):
+        for tag in soup.find_all({'xbrli:context'}):
             text = ''
             members = []
-            for member in tags_from_html('xbrldi:explicitMember', tag['content']):
+            for member in tag({'xbrldi:explicitmember'}):
                 try:
-                    members.append(member['content'])
+                    members.append(member.string)
                 except:
                     pass
             members.sort()
             text += ' '.join(members)    
-            contexts[tag['attributes']['id']] = text
+            contexts[tag['id']] = text
         return contexts
     
-    def _ix_fields_from_html(self, html):
+    def _ix_fields_from_html(self, soup):
         ix_fields = OrderedDict()   # name (context description): [text]
-        for ix_name in ('ix:nonNumeric', 'ix:nonFraction'):
-            for tag in tags_from_html(ix_name, html):
+        for tag in soup.find_all({re.compile('^ix:')}):
+            try:
                 try:
-                    context = tag['attributes']['contextref']
-                    
+                    context = tag['contextRef']
+                except:
                     try:
-                        description = self.contexts[context]
+                        context = tag['contextref']
                     except:
-                        description = context
-                        print(f'*** Error: document missing context info for {context}, using context name instead.')
+                        # Not a tag we're processing yet.
+                        continue
 
-                    # If there is description text, put it in parenthesis (if empty string, no parenthesis).
-                    if description: description = f' ({description})'
+                try:
+                    description = self.contexts[context]
+                except:
+                    description = context
+                    print(f'*** Error: document missing context info for {context}, using context name instead.')
 
-                    name = tag['attributes']['name']
-                    text = tag['content']
+                # If there is description text, put it in parenthesis (if empty string, no parenthesis).
+                if description: description = f' ({description})'
 
-                    ix_fields[f'{name}{description}'] = text
-                    
-                    # DEBUG:
-                    #if 'cafr:Revenues' in name:
-                    #    print(f'*** DEBUG: {self.path}: {name}{description}: {text}')
-                except Exception as e:
-                    print(f"*** Exception: {type(e)}: {e}")
-                    print(tag)
+                name = tag['name']
+                text = tag.string
+
+                ix_fields[f'{name}{description}'] = text
+
+                # DEBUG:
+                #if 'cafr:Revenues' in name:
+                #    print(f'*** DEBUG: {self.path}: {name}{description}: {text}')
+            except Exception as e:
+                print(f"*** Exception: {type(e)}: {e}")
+                print(tag)
         return ix_fields
 
 
-# In[5]:
+# In[12]:
 
 
 class SummarySpreadsheet:    
@@ -314,7 +304,7 @@ class SummarySpreadsheet:
         return pd.to_numeric(converted, downcast=downcast)
 
 
-# In[6]:
+# In[13]:
 
 
 def main(paths=None):
@@ -331,7 +321,7 @@ def main(paths=None):
     print('Generated output.xlsx')
 
 
-# In[7]:
+# In[14]:
 
 
 def test():
@@ -342,7 +332,7 @@ def test():
     main(paths)
 
 
-# In[8]:
+# In[15]:
 
 
 #main()
