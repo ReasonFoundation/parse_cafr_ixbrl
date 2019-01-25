@@ -9,9 +9,9 @@
 # The ``getix.ipynb`` file is considered the source (it's a [Jupyter Notebook](https://jupyter.org)), and ``getix.py`` is derived from that. You can run the script using either file, though for the .ipynb file you need to install Jupyter and run the ``jupyter notebook`` command.
 
 # ## Resources
-# - [iXBRL spec](docs/IXBRL%20Spec%201.1.html) ([web location](https://specifications.xbrl.org/work-product-index-inline-xbrl-inline-xbrl-1.1.html))
-# - [iXBRL schema](docs/IXBRL%20Schema%201.1.html) ([web location](http://www.xbrl.org/specification/inlinexbrl-part2/rec-2013-11-18/inlinexbrl-part2-rec-2013-11-18.html))
-# - [iXBRL primer](docs/IXBRL%20Primer%201.1.html) ([web location](http://www.xbrl.org/WGN/inlineXBRL-part0/WGN-2015-12-09/inlineXBRL-part0-WGN-2015-12-09.html))
+# - [iXBRL spec](http://www.xbrl.org/specification/inlinexbrl-part1/rec-2013-11-18/inlinexbrl-part1-rec-2013-11-18.html)
+# - [iXBRL schema](http://www.xbrl.org/specification/inlinexbrl-part2/rec-2013-11-18/inlinexbrl-part2-rec-2013-11-18.html)
+# - [iXBRL primer](http://www.xbrl.org/WGN/inlineXBRL-part0/WGN-2015-12-09/inlineXBRL-part0-WGN-2015-12-09.html)
 # - [XBRL - Wikipedia](https://en.wikipedia.org/wiki/XBRL)
 # 
 
@@ -19,7 +19,7 @@
 # URLs that take too long to return data:
 # - https://xbrlus.github.io/cafr/samples/8/va-c-bris-20160630.xhtml
 
-# In[9]:
+# In[1]:
 
 
 urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm',
@@ -34,7 +34,7 @@ urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm'
 # ## Libraries
 # **BeautifulSoup**: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
 
-# In[10]:
+# In[2]:
 
 
 import re
@@ -70,7 +70,7 @@ from collections import OrderedDict
 # 
 #         <td id="_NETPOSITION_B10" style="text-align:right;width:114px;">$&#160;&#160;&#160;&#160;&#160;&#160;&#160;<ix:nonFraction name="cafr:CashAndCashEquivalents" contextRef="_ctx3" id="NETPOSITION_B10" unitRef="ISO4217_USD" decimals = "0" format="ixt:numdotdecimal">336,089,928</ix:nonFraction>&#160;</td>
 
-# In[11]:
+# In[3]:
 
 
 class XbrliDocument:
@@ -93,10 +93,24 @@ class XbrliDocument:
         
         self.path = path
         
-        soup = BeautifulSoup(html, parser='lxml')
+        soup = BeautifulSoup(html, 'lxml')
+        
+        #self.header = self._header(soup)
         self.contexts = self._contexts_from_html(soup)
         self.ix_fields = self._ix_fields_from_html(soup)
     
+    def _header(self, soup):
+        '''
+        http://www.xbrl.org/specification/inlinexbrl-part1/rec-2013-11-18/inlinexbrl-part1-rec-2013-11-18.html#d1e3966
+        
+        The ix:header element MUST NOT be a descendant of an HTML head element.
+        The ix:header element MUST have no more than one ix:hidden child element.
+        The ix:header element MUST have no more than one ix:resources child element.
+        '''
+        tag = soup.find({'ix:header'})
+        print(f'*** DEBUG: header: {tag}')
+        return {}
+        
     def _contexts_from_html(self, soup):
         contexts = OrderedDict()   # id: text description
         for tag in soup.find_all({'xbrli:context'}):
@@ -148,7 +162,7 @@ class XbrliDocument:
         return ix_fields
 
 
-# In[12]:
+# In[4]:
 
 
 class SummarySpreadsheet:    
@@ -163,11 +177,8 @@ class SummarySpreadsheet:
         # Load all specified documents.
         for path in paths:
             print(f'Loading {path}...')
-            try:
-                doc = XbrliDocument(path=path)
-                self.docs.append(doc)
-            except:
-                pass
+            doc = XbrliDocument(path=path)
+            self.docs.append(doc)
 
         for url in urls:
             print(f'Downloading {url}...')
@@ -304,7 +315,7 @@ class SummarySpreadsheet:
         return pd.to_numeric(converted, downcast=downcast)
 
 
-# In[13]:
+# In[5]:
 
 
 def main(paths=None):
@@ -321,7 +332,7 @@ def main(paths=None):
     print('Generated output.xlsx')
 
 
-# In[14]:
+# In[6]:
 
 
 def test():
@@ -332,7 +343,7 @@ def test():
     main(paths)
 
 
-# In[15]:
+# In[7]:
 
 
 #main()
