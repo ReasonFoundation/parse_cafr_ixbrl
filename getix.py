@@ -16,10 +16,12 @@
 # 
 
 # ## Urls containing sample iXBRL docs
+# - https://xbrl.us/xbrl-taxonomy/2019-cafr/
+# 
 # URLs that take too long to return data:
 # - https://xbrlus.github.io/cafr/samples/8/va-c-bris-20160630.xhtml
 
-# In[599]:
+# In[1]:
 
 
 urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm',
@@ -34,7 +36,7 @@ urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm'
 # ## Libraries
 # **BeautifulSoup**: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
 
-# In[600]:
+# In[2]:
 
 
 import re
@@ -56,7 +58,7 @@ from collections import OrderedDict
 # 
 # At some point we may want to allow for writing out a pure XBRL document, in which case all elements will need an associated class that knows how to write itself out in XBRL.
 
-# In[601]:
+# In[3]:
 
 
 class Element:    
@@ -82,7 +84,7 @@ class Element:
         return self.doc.contexts[self.contextref]
 
 
-# In[602]:
+# In[4]:
 
 
 class IXHeader(Element):
@@ -106,7 +108,7 @@ class IXHeader(Element):
         return contexts
 
 
-# In[603]:
+# In[5]:
 
 
 class XBRLIContext(Element):
@@ -124,13 +126,13 @@ class XBRLIContext(Element):
             return self._explicit_members
         except:
             # Using a set for fast searching.
-            self._explicit_members = set()
+            self._explicit_members = set()            
             for member in self.tag({'xbrldi:explicitmember'}):
                 self.explicit_members.add(member.string)
         return self._explicit_members        
 
 
-# In[604]:
+# In[6]:
 
 
 class IXContinuation(Element):
@@ -145,7 +147,7 @@ class IXContinuation(Element):
     pass
 
 
-# In[605]:
+# In[7]:
 
 
 class IXExclude(Element):
@@ -160,7 +162,7 @@ class IXExclude(Element):
     pass
 
 
-# In[606]:
+# In[8]:
 
 
 class IXFootnote(Element):
@@ -180,7 +182,7 @@ class IXFootnote(Element):
     pass
 
 
-# In[607]:
+# In[9]:
 
 
 class IXFraction(Element):
@@ -203,7 +205,7 @@ class IXFraction(Element):
     pass
 
 
-# In[608]:
+# In[10]:
 
 
 class IXDenominator(Element):
@@ -220,7 +222,7 @@ class IXDenominator(Element):
     pass
 
 
-# In[609]:
+# In[11]:
 
 
 class IXNumerator(Element):
@@ -237,7 +239,7 @@ class IXNumerator(Element):
     pass
 
 
-# In[610]:
+# In[12]:
 
 
 class IXHidden(Element):
@@ -251,7 +253,7 @@ class IXHidden(Element):
     pass
 
 
-# In[611]:
+# In[13]:
 
 
 class IXNonFraction(Element):
@@ -280,7 +282,7 @@ class IXNonFraction(Element):
     pass
 
 
-# In[612]:
+# In[14]:
 
 
 class IXNonNumeric(Element):
@@ -305,7 +307,7 @@ class IXNonNumeric(Element):
     pass
 
 
-# In[613]:
+# In[15]:
 
 
 class IXReferences(Element):
@@ -323,7 +325,7 @@ class IXReferences(Element):
     pass
 
 
-# In[614]:
+# In[16]:
 
 
 class IXRelationship(Element):
@@ -341,7 +343,7 @@ class IXRelationship(Element):
     pass
 
 
-# In[615]:
+# In[17]:
 
 
 class IXResources(Element):
@@ -355,7 +357,7 @@ class IXResources(Element):
     pass
 
 
-# In[616]:
+# In[18]:
 
 
 class IXTuple(Element):
@@ -377,7 +379,7 @@ class IXTuple(Element):
     pass
 
 
-# In[617]:
+# In[19]:
 
 
 # Global that correlates tag names with the class representing that tag.
@@ -400,7 +402,7 @@ element_classes = {
 }
 
 
-# In[618]:
+# In[20]:
 
 
 class InputCriteria:
@@ -425,14 +427,19 @@ class InputCriteria:
         except:
             return False
         
-        context_members = element.context.explicit_members
+        # Fails if no formal context definition was provided, in which case we just try to match the contextref attribute.
+        try:
+            context_members = element.context.explicit_members
+        except:
+            context_members = [element.tag['contextref']]
+            
         for member in self.required_members:
             if member not in context_members:
                 return False
         return True
 
 
-# In[619]:
+# In[21]:
 
 
 class XbrliDocument:
@@ -478,7 +485,7 @@ class XbrliDocument:
         return self._contexts
 
 
-# In[620]:
+# In[22]:
 
 
 class SummarySpreadsheet:    
@@ -629,7 +636,7 @@ class SummarySpreadsheet:
         return pd.to_numeric(converted, downcast=downcast)
 
 
-# In[621]:
+# In[23]:
 
 
 def main(paths=None):
@@ -638,7 +645,7 @@ def main(paths=None):
         spreadsheet = SummarySpreadsheet(paths=paths)
     else:
         spreadsheet = SummarySpreadsheet(urls=urls)
-        
+    
     spreadsheet.to_csv()
     print('Generated output.csv')
     
@@ -646,7 +653,7 @@ def main(paths=None):
     print('Generated output.xlsx')
 
 
-# In[622]:
+# In[24]:
 
 
 def test():
@@ -657,7 +664,7 @@ def test():
     main(paths)
 
 
-# In[624]:
+# In[25]:
 
 
 #main()
