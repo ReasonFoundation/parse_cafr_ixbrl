@@ -19,7 +19,7 @@
 # URLs that take too long to return data:
 # - https://xbrlus.github.io/cafr/samples/8/va-c-bris-20160630.xhtml
 
-# In[1]:
+# In[599]:
 
 
 urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm',
@@ -34,7 +34,7 @@ urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm'
 # ## Libraries
 # **BeautifulSoup**: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
 
-# In[2]:
+# In[600]:
 
 
 import re
@@ -49,28 +49,390 @@ import numpy as np
 from collections import OrderedDict
 
 
-# ## Context definitions
-# Need to get a description for each context. A context element looks like this:
+# ## iXBRL classes
+# A class for most iXBRL elements.
 # 
-#        <xbrli:context id="_ctx9">
-#           <xbrli:entity><xbrli:identifier scheme="http://www.govwiki.info">47210100100000</xbrli:identifier></xbrli:entity>
-#           <xbrli:period><xbrli:instant>2018-06-30</xbrli:instant></xbrli:period>
-#           <xbrli:scenario>
-#              <xbrldi:explicitMember dimension="cafr:FinancialReportingEntityAxis">cafr:PrimaryGovernmentActivitiesMember</xbrldi:explicitMember>
-#              <xbrldi:explicitMember dimension="cafr:BasisOfAccountingAxis">cafr:ModifiedAccrualBasisOfAccountingMember</xbrldi:explicitMember>
-#              <xbrldi:explicitMember dimension="cafr:ActivityTypeAxis">cafr:GovernmentalTypeActivityMember</xbrldi:explicitMember>
-#              <xbrldi:explicitMember dimension="cafr:ClassificationOfFundTypeAxis">cafr:GeneralFundMember</xbrldi:explicitMember>
-#              <xbrldi:explicitMember dimension="cafr:MagnitudeAxis">cafr:MajorMember</xbrldi:explicitMember>
-#           </xbrli:scenario>
-#        </xbrli:context>
+# Some are defined but not being used yet in the code, since some elements (like ``ix:hidden``) aren't important in the parsing process. Some are not defined yet (like ``xbrldi:explicitmember``) because we just mine their info from the HTML and don't need to instantiate them as objects.
 # 
+# At some point we may want to allow for writing out a pure XBRL document, in which case all elements will need an associated class that knows how to write itself out in XBRL.
 
-# ## Actual data
-# Data looks like this:
-# 
-#         <td id="_NETPOSITION_B10" style="text-align:right;width:114px;">$&#160;&#160;&#160;&#160;&#160;&#160;&#160;<ix:nonFraction name="cafr:CashAndCashEquivalents" contextRef="_ctx3" id="NETPOSITION_B10" unitRef="ISO4217_USD" decimals = "0" format="ixt:numdotdecimal">336,089,928</ix:nonFraction>&#160;</td>
+# In[601]:
 
-# In[3]:
+
+class Element:    
+    def __init__(self, tag, doc):
+        self.tag = tag
+        self.doc = doc   # This should be a weakref, but that wasn't working w/property, need to investigate.
+    
+    @property
+    def name(self):
+        # This is the iXBRL name attribute, not the BeautifulSoup tag name...
+        return self.tag['name']
+    
+    @property
+    def string(self):
+        return self.tag.string
+    
+    @property
+    def contextref(self):
+        return self.tag['contextref']
+    
+    @property
+    def context(self):
+        return self.doc.contexts[self.contextref]
+
+
+# In[602]:
+
+
+class IXHeader(Element):
+    '''
+    The ix:header element contains the non-displayed portions of the Target Document.
+    
+    The ix:header element MUST NOT be a descendant of an HTML head element.
+    The ix:header element MUST have no more than one ix:hidden child element.
+    The ix:header element MUST have no more than one ix:resources child element.
+
+    <ix:header>
+    Content: (ix:hidden? ix:references* ix:resources?)
+    </ix:header>
+    '''
+    @property
+    def contexts(self):
+        contexts = []
+        context_class = element_classes['xbrli:context']
+        for tag in self.tag.find_all({'xbrli:context'}):
+            contexts.append(context_class(tag, self.doc))
+        return contexts
+
+
+# In[603]:
+
+
+class XBRLIContext(Element):
+    '''
+    The xbrli:context element MUST NOT have any descendant elements with a namespace name which has a 
+    value of http://www.xbrl.org/2013/inlineXBRL.    
+    '''
+    @property
+    def id(self):
+        return self.tag['id']
+    
+    @property
+    def explicit_members(self):
+        try:
+            return self._explicit_members
+        except:
+            # Using a set for fast searching.
+            self._explicit_members = set()
+            for member in self.tag({'xbrldi:explicitmember'}):
+                self.explicit_members.add(member.string)
+        return self._explicit_members        
+
+
+# In[604]:
+
+
+class IXContinuation(Element):
+    '''
+    The ix:continuation element is used to define data that is to be treated as part of 
+    ix:footnote or ix:nonNumeric elements.
+    
+    <ix:continuation continuedAt = NCName id = NCName>
+    Content: ( any element | any text node )*
+    </ix:continuation>
+    '''
+    pass
+
+
+# In[605]:
+
+
+class IXExclude(Element):
+    '''
+    The ix:exclude element is used to encapsulate data that is to be excluded from the processing of 
+    ix:footnote or ix:nonNumeric elements.
+    
+    <ix:exclude>
+    Content: ( any element | any text node )*
+    </ix:exclude>
+    '''
+    pass
+
+
+# In[606]:
+
+
+class IXFootnote(Element):
+    '''
+    The ix:footnote element represents the link:footnote element.
+    
+    <ix:footnote
+    any attribute with a namespace name which has the value http://www.w3.org/XML/1998/namespace
+
+    footnoteRole = anyURI
+    continuedAt = NCName
+    id = NCName
+    title = string>
+    Content: ( any element | any text node ) +
+    </ix:footnote>
+    '''
+    pass
+
+
+# In[607]:
+
+
+class IXFraction(Element):
+    '''
+    The ix:fraction element denotes an XBRL fact which is an element of type, or derived from type, fractionItemType.
+    
+    <ix:fraction
+    any attribute with a namespace name which has a value other than http://www.xbrl.org/2013/inlineXBRL
+
+    contextRef = NCName
+    id = NCName
+    name = QName
+    order = decimal
+    target = NCName
+    tupleRef = NCName
+    unitRef = NCName>
+    Content: ( any text node | any children with a namespace name which has a value other than http://www.xbrl.org/2013/inlineXBRL | ix:fraction | ix:denominator | ix:numerator ) +
+    </ix:fraction>
+    '''
+    pass
+
+
+# In[608]:
+
+
+class IXDenominator(Element):
+    '''
+    The ix:denominator element denotes an XBRL denominator element.
+        
+    <ix:denominator
+    format = QName
+    scale = integer
+    sign = string>
+    Content: ( non-empty text node )
+    </ix:denominator>
+    '''
+    pass
+
+
+# In[609]:
+
+
+class IXNumerator(Element):
+    '''
+    The ix:numerator element denotes an XBRL numerator element.
+    
+    <ix:numerator
+    format = QName
+    scale = integer
+    sign = string>
+    Content: ( non-empty text node )
+    </ix:numerator>
+    '''
+    pass
+
+
+# In[610]:
+
+
+class IXHidden(Element):
+    '''
+    The ix:hidden element is used to contain XBRL facts that are not to be displayed in the browser.
+    
+    <ix:hidden>
+    Content: ( ix:footnote | ix:fraction | ix:nonFraction | ix:nonNumeric | ix:tuple) +
+    </ix:hidden>
+    '''
+    pass
+
+
+# In[611]:
+
+
+class IXNonFraction(Element):
+    '''
+    The ix:nonFraction element denotes an XBRL numeric item which is an element which is not of type, 
+    nor derived from type, fractionItemType.
+    
+    <ix:nonFraction
+    any attribute with a namespace name which has a value other than http://www.xbrl.org/2013/inlineXBRL
+
+    contextRef = NCName
+    decimals = xbrli:decimalsType
+    format = QName
+    id = NCName
+    name = QName
+    order = decimal
+    precision = xbrli:precisionType
+    target = NCName
+    tupleRef = NCName
+    scale = integer
+    sign = string
+    unitRef = NCName>
+    Content: ( ix:nonFraction | any text node )
+    </ix:nonFraction>
+    '''
+    pass
+
+
+# In[612]:
+
+
+class IXNonNumeric(Element):
+    '''
+    The ix:nonNumeric element denotes an XBRL non-numeric item.
+    
+    <ix:nonNumeric
+    any attribute with a namespace name which has a value other than http://www.xbrl.org/2013/inlineXBRL
+    
+    contextRef = NCName
+    continuedAt = NCName
+    escape = boolean
+    format = QName
+    id = NCName
+    name = QName
+    order = decimal
+    target = NCName
+    tupleRef = NCName>
+    Content: ( any element | any text node ) *
+    </ix:nonNumeric>
+    '''
+    pass
+
+
+# In[613]:
+
+
+class IXReferences(Element):
+    '''
+    The ix:references element is used to contain reference elements which are required by a given Target Document.
+    
+    <ix:references
+    any attribute with a namespace name which has a value other than http://www.xbrl.org/2013/inlineXBRL
+    
+    id = NCNametarget = NCName
+    target = NCName>
+    Content: ( link:schemaRef | link:linkbaseRef) +
+    </ix:references>
+    '''
+    pass
+
+
+# In[614]:
+
+
+class IXRelationship(Element):
+    '''
+    <ix:relationship
+    any attribute with a namespace name which has the value http://www.w3.org/XML/1998/namespace
+    
+    arcrole = anyURI
+    fromRefs = List of NCName values
+    linkRole = anyURI
+    order = decimal
+    toRefs = List of NCName values
+    </ix:relationship>
+    '''
+    pass
+
+
+# In[615]:
+
+
+class IXResources(Element):
+    '''
+    The ix:resources element is used to contain resource elements which are required by one or more Target Documents.
+    
+    <ix:resources>
+    Content: ( ix:relationship | link:roleRef | link:arcroleRef | xbrli:context | xbrli:unit) *
+    </ix:resources>
+    '''
+    pass
+
+
+# In[616]:
+
+
+class IXTuple(Element):
+    '''
+    The ix:tuple element denotes an XBRL tuple.
+    
+    <ix:tuple
+    any attribute with a namespace name which has a value other than http://www.xbrl.org/2013/inlineXBRL
+    
+    id = NCName
+    name = QName
+    order = decimal
+    target = NCName
+    tupleID = NCName
+    tupleRef = NCName>
+    Content: ( any children with a namespace name which has a value other than http://www.xbrl.org/2013/inlineXBRL | ix:fraction | ix:nonFraction | ix:nonNumeric | ix:tuple | any text node ) *
+    </ix:tuple>
+    '''
+    pass
+
+
+# In[617]:
+
+
+# Global that correlates tag names with the class representing that tag.
+element_classes = {
+    'ix:continuation': IXContinuation,
+    'ix:exclude': IXExclude,
+    'ix:footnote': IXFootnote,
+    'ix:fraction': IXFraction,
+    'ix:denominator': IXDenominator,
+    'ix:numerator': IXNumerator,
+    'ix:header': IXHeader,
+    'ix:hidden': IXHidden,
+    'ix:nonfraction': IXNonFraction,
+    'ix:nonnumeric': IXNonNumeric,
+    'ix:references': IXReferences,
+    'ix:relationship': IXRelationship,
+    'ix:resources': IXResources,
+    'ix:tuple': IXTuple,
+    'xbrli:context': XBRLIContext
+}
+
+
+# In[618]:
+
+
+class InputCriteria:
+    ''' Represents input criteria for an output field from config.csv. '''
+    # cafr:CashAndCashEquivalents (cafr:AccrualBasisOfAccountingMember cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
+    regex = re.compile(r'(.*?)\s*\((.*?)\)')
+    
+    def __init__(self, text):
+        result = self.regex.search(text)
+        try:
+            self.name = result.group(1)
+            self.required_members = result.group(2).split()
+        except:
+            # Some criteria, such as cafr:DocumentName, don't have context info.
+            self.name = text
+            self.required_members = []
+            
+    def matches_element(self, element):
+        try:
+            if element.name != self.name:
+                return False
+        except:
+            return False
+        
+        context_members = element.context.explicit_members
+        for member in self.required_members:
+            if member not in context_members:
+                return False
+        return True
+
+
+# In[619]:
 
 
 class XbrliDocument:
@@ -92,77 +454,31 @@ class XbrliDocument:
             raise Exception("Need a path or url argument!")
         
         self.path = path
-        
+
         soup = BeautifulSoup(html, 'lxml')
+        self.ix_elements = [element_classes[tag.name](tag, self) for tag in soup.find_all({re.compile(r'^ix:')})]
+                
+    @property
+    def header(self):
+        ''' The header element for the document. '''
+        # Not going to be referenced much so no need to store as an instance variable, just look it up.
+        for element in self.ix_elements:
+            if isinstance(element, IXHeader):
+                return element
         
-        #self.header = self._header(soup)
-        self.contexts = self._contexts_from_html(soup)
-        self.ix_fields = self._ix_fields_from_html(soup)
-    
-    def _header(self, soup):
-        '''
-        http://www.xbrl.org/specification/inlinexbrl-part1/rec-2013-11-18/inlinexbrl-part1-rec-2013-11-18.html#d1e3966
-        
-        The ix:header element MUST NOT be a descendant of an HTML head element.
-        The ix:header element MUST have no more than one ix:hidden child element.
-        The ix:header element MUST have no more than one ix:resources child element.
-        '''
-        tag = soup.find({'ix:header'})
-        print(f'*** DEBUG: header: {tag}')
-        return {}
-        
-    def _contexts_from_html(self, soup):
-        contexts = OrderedDict()   # id: text description
-        for tag in soup.find_all({'xbrli:context'}):
-            text = ''
-            members = []
-            for member in tag({'xbrldi:explicitmember'}):
-                try:
-                    members.append(member.string)
-                except:
-                    pass
-            members.sort()
-            text += ' '.join(members)    
-            contexts[tag['id']] = text
-        return contexts
-    
-    def _ix_fields_from_html(self, soup):
-        ix_fields = OrderedDict()   # name (context description): [text]
-        for tag in soup.find_all({re.compile('^ix:')}):
-            try:
-                try:
-                    context = tag['contextRef']
-                except:
-                    try:
-                        context = tag['contextref']
-                    except:
-                        # Not a tag we're processing yet.
-                        continue
-
-                try:
-                    description = self.contexts[context]
-                except:
-                    description = context
-                    print(f'*** Error: document missing context info for {context}, using context name instead.')
-
-                # If there is description text, put it in parenthesis (if empty string, no parenthesis).
-                if description: description = f' ({description})'
-
-                name = tag['name']
-                text = tag.string
-
-                ix_fields[f'{name}{description}'] = text
-
-                # DEBUG:
-                #if 'cafr:Revenues' in name:
-                #    print(f'*** DEBUG: {self.path}: {name}{description}: {text}')
-            except Exception as e:
-                print(f"*** Exception: {type(e)}: {e}")
-                print(tag)
-        return ix_fields
+    @property
+    def contexts(self):
+        # Contexts will be accessed frequently, so storing them.
+        try:
+            return self._contexts
+        except:
+            self._contexts = {}   # context id: element
+            for context in self.header.contexts:
+                self._contexts[context.id] = context
+        return self._contexts
 
 
-# In[4]:
+# In[620]:
 
 
 class SummarySpreadsheet:    
@@ -171,8 +487,6 @@ class SummarySpreadsheet:
         self.urls = urls
         self.config_path = config_path
         self.docs = []
-        self._dataframe = None       # The actual data parsed from the documents.
-        self._output_fields = None   # Controlled by config.csv.
         
         # Load all specified documents.
         for path in paths:
@@ -240,29 +554,29 @@ class SummarySpreadsheet:
 
     @property
     def dataframe(self):
-        if self._dataframe is not None: return self._dataframe
-
         # Build up data dictionary to become DataFrame.
         sheet_data = OrderedDict()
         
         # For each output field, go through each doc and get the value based on input fields
-        for output_name, input_names in self.output_fields.items():
+        for output_name, inputs in self.output_fields.items():
             values = []
             for doc in self.docs:
-                for name in input_names:
+                for criteria in inputs:
                     value_found = False
-                    if name in doc.ix_fields:
-                        values.append(doc.ix_fields[name])
-                        value_found = True
+                    for element in doc.ix_elements:
+                        # Could be this element or a child of it that matches.
+                        if criteria.matches_element(element):
+                            values.append(element.string)
+                            value_found = True
+                            break
+                    if value_found:
                         break
                     
                 # If no value for this output field, need an empty value.
                 if not value_found:
                     values.append('')
-            sheet_data[output_name] = values
-         
-        self._dataframe = DataFrame(sheet_data)
-        return self._dataframe
+            sheet_data[output_name] = values         
+        return DataFrame(sheet_data)
 
     @property
     def output_fields(self):
@@ -272,26 +586,26 @@ class SummarySpreadsheet:
 
         CSV Format:
 
-        Output Field Name,Input Field Name
+        Output Field Name,Input Field Name (minimum required contexts)
         Document Title,cafr:DocumentTitle
 
         The same Output Field Name can be used multiple times, 
         to allow multiple Input Field Names tied to the same output name.
         In that case, only the first matching Input Field Name will be used for a document.
 
-        Returns a dictionary with the output field name as the key and a list of input fields as the value.
-
-        {'Document Title': ['cafr:DocumentTitle'],
-         'Name of Government': ['cafr:NameOfGovernment']}
+        Returns a dictionary with the output field name as the key and a list of InputCriteria objects as the value.
         '''
-        if self._output_fields: return self._output_fields
+        try:
+            return self._output_fields
+        except:
+            pass
         
         self._output_fields = OrderedDict()
         try:
             df = pd.read_csv(self.config_path)
             for output_name, input_name in df.itertuples(index=False):
                 inputs = self._output_fields.setdefault(output_name, [])
-                inputs.append(input_name)
+                inputs.append(InputCriteria(input_name))
         except FileNotFoundError:
             for doc in self.docs:
                 for key in doc.ix_fields:
@@ -315,7 +629,7 @@ class SummarySpreadsheet:
         return pd.to_numeric(converted, downcast=downcast)
 
 
-# In[5]:
+# In[621]:
 
 
 def main(paths=None):
@@ -326,13 +640,13 @@ def main(paths=None):
         spreadsheet = SummarySpreadsheet(urls=urls)
         
     spreadsheet.to_csv()
-    print('Generated output.csv.')
+    print('Generated output.csv')
     
     spreadsheet.to_excel()
     print('Generated output.xlsx')
 
 
-# In[6]:
+# In[622]:
 
 
 def test():
@@ -343,7 +657,7 @@ def test():
     main(paths)
 
 
-# In[7]:
+# In[624]:
 
 
 #main()
