@@ -14,6 +14,9 @@
 # - [iXBRL primer](http://www.xbrl.org/WGN/inlineXBRL-part0/WGN-2015-12-09/inlineXBRL-part0-WGN-2015-12-09.html)
 # - [XBRL - Wikipedia](https://en.wikipedia.org/wiki/XBRL)
 # 
+# ### TODO: Create an Excel add-in
+# - [Microsoft Excel add-in overview](https://docs.microsoft.com/en-us/office/dev/add-ins/excel/excel-add-ins-overview)
+# - [xlwings for using Python w/Excel](https://www.xlwings.org/examples)
 
 # ## Urls containing sample iXBRL docs
 # - https://xbrl.us/xbrl-taxonomy/2019-cafr/
@@ -21,7 +24,7 @@
 # URLs that take too long to return data:
 # - https://xbrlus.github.io/cafr/samples/8/va-c-bris-20160630.xhtml
 
-# In[1]:
+# In[57]:
 
 
 urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm',
@@ -36,7 +39,7 @@ urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm'
 # ## Libraries
 # **BeautifulSoup**: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
 
-# In[2]:
+# In[58]:
 
 
 import re
@@ -58,7 +61,7 @@ from collections import OrderedDict
 # 
 # At some point we may want to allow for writing out a pure XBRL document, in which case all elements will need an associated class that knows how to write itself out in XBRL.
 
-# In[3]:
+# In[59]:
 
 
 class Element:    
@@ -84,7 +87,7 @@ class Element:
         return self.doc.contexts[self.contextref]
 
 
-# In[4]:
+# In[60]:
 
 
 class IXHeader(Element):
@@ -108,7 +111,7 @@ class IXHeader(Element):
         return contexts
 
 
-# In[5]:
+# In[61]:
 
 
 class XBRLIContext(Element):
@@ -132,7 +135,7 @@ class XBRLIContext(Element):
         return self._explicit_members        
 
 
-# In[6]:
+# In[62]:
 
 
 class IXContinuation(Element):
@@ -147,7 +150,7 @@ class IXContinuation(Element):
     pass
 
 
-# In[7]:
+# In[63]:
 
 
 class IXExclude(Element):
@@ -162,7 +165,7 @@ class IXExclude(Element):
     pass
 
 
-# In[8]:
+# In[64]:
 
 
 class IXFootnote(Element):
@@ -182,7 +185,7 @@ class IXFootnote(Element):
     pass
 
 
-# In[9]:
+# In[65]:
 
 
 class IXFraction(Element):
@@ -205,7 +208,7 @@ class IXFraction(Element):
     pass
 
 
-# In[10]:
+# In[66]:
 
 
 class IXDenominator(Element):
@@ -222,7 +225,7 @@ class IXDenominator(Element):
     pass
 
 
-# In[11]:
+# In[67]:
 
 
 class IXNumerator(Element):
@@ -239,7 +242,7 @@ class IXNumerator(Element):
     pass
 
 
-# In[12]:
+# In[68]:
 
 
 class IXHidden(Element):
@@ -253,7 +256,7 @@ class IXHidden(Element):
     pass
 
 
-# In[13]:
+# In[69]:
 
 
 class IXNonFraction(Element):
@@ -279,10 +282,31 @@ class IXNonFraction(Element):
     Content: ( ix:nonFraction | any text node )
     </ix:nonFraction>
     '''
-    pass
+    @property
+    def scale(self):
+        return int(self.tag['scale'])
+    
+    @property
+    def string(self):
+        # Optional scale attribute will be 0, 3 or 6, number needs to be multiplied by 10 ** scale.
+        
+        # Have to remove commas from the number (sigh).
+        # A non-numeric value raises exception.
+        try:
+            number = int(self.tag.string.replace(',', ''))
+        except:
+            return self.tag.string
+        
+        try:
+            # In an exception handler in case there is no scale.
+            multiplier = 10 ** self.scale
+            number *= multiplier
+        except:
+            pass
+        return str(number)
 
 
-# In[14]:
+# In[70]:
 
 
 class IXNonNumeric(Element):
@@ -307,7 +331,7 @@ class IXNonNumeric(Element):
     pass
 
 
-# In[15]:
+# In[71]:
 
 
 class IXReferences(Element):
@@ -325,7 +349,7 @@ class IXReferences(Element):
     pass
 
 
-# In[16]:
+# In[72]:
 
 
 class IXRelationship(Element):
@@ -343,7 +367,7 @@ class IXRelationship(Element):
     pass
 
 
-# In[17]:
+# In[73]:
 
 
 class IXResources(Element):
@@ -357,7 +381,7 @@ class IXResources(Element):
     pass
 
 
-# In[18]:
+# In[74]:
 
 
 class IXTuple(Element):
@@ -379,7 +403,7 @@ class IXTuple(Element):
     pass
 
 
-# In[19]:
+# In[75]:
 
 
 # Global that correlates tag names with the class representing that tag.
@@ -402,7 +426,7 @@ element_classes = {
 }
 
 
-# In[20]:
+# In[76]:
 
 
 class InputCriteria:
@@ -439,7 +463,7 @@ class InputCriteria:
         return True
 
 
-# In[21]:
+# In[77]:
 
 
 class XbrliDocument:
@@ -485,7 +509,7 @@ class XbrliDocument:
         return self._contexts
 
 
-# In[22]:
+# In[78]:
 
 
 class SummarySpreadsheet:    
@@ -636,7 +660,7 @@ class SummarySpreadsheet:
         return pd.to_numeric(converted, downcast=downcast)
 
 
-# In[23]:
+# In[79]:
 
 
 def main(paths=None):
@@ -653,7 +677,7 @@ def main(paths=None):
     print('Generated output.xlsx')
 
 
-# In[24]:
+# In[80]:
 
 
 def test():
@@ -664,7 +688,7 @@ def test():
     main(paths)
 
 
-# In[25]:
+# In[81]:
 
 
 #main()
