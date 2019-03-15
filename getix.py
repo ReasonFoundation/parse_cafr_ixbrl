@@ -24,7 +24,7 @@
 # URLs that take too long to return data:
 # - https://xbrlus.github.io/cafr/samples/8/va-c-bris-20160630.xhtml
 
-# In[57]:
+# In[243]:
 
 
 urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm',
@@ -39,7 +39,7 @@ urls = ['https://xbrlus.github.io/cafr/samples/3/Alexandria-2018-Statements.htm'
 # ## Libraries
 # **BeautifulSoup**: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
 
-# In[58]:
+# In[244]:
 
 
 import re
@@ -48,6 +48,7 @@ from bs4 import BeautifulSoup
 from pandas import Series, DataFrame
 import pandas as pd
 import numpy as np
+import datetime
 
 # In Python 3.7, dict is automatically ordered, but to allow for people using previous versions,
 # need to use an OrderedDict or the results will be messy.
@@ -61,7 +62,7 @@ from collections import OrderedDict
 # 
 # At some point we may want to allow for writing out a pure XBRL document, in which case all elements will need an associated class that knows how to write itself out in XBRL.
 
-# In[59]:
+# In[245]:
 
 
 class Element:    
@@ -87,7 +88,7 @@ class Element:
         return self.doc.contexts[self.contextref]
 
 
-# In[60]:
+# In[246]:
 
 
 class IXHeader(Element):
@@ -111,7 +112,7 @@ class IXHeader(Element):
         return contexts
 
 
-# In[61]:
+# In[247]:
 
 
 class XBRLIContext(Element):
@@ -132,10 +133,27 @@ class XBRLIContext(Element):
             self._explicit_members = set()            
             for member in self.tag({'xbrldi:explicitmember'}):
                 self.explicit_members.add(member.string)
-        return self._explicit_members        
+        return self._explicit_members
+    
+    @property
+    def period(self):
+        ''' Returns a datetime.date object representing the period specified for this element, or 1900-01-01 to support sorting by date. '''
+        # Doing this properly needs more review of the spec -- for now assuming zero or one xbrli:instant element.
+        # <xbrli:period><xbrli:instant>2016-11-30</xbrli:instant></xbrli:period>
+        try:
+            return self._period
+        except:
+            # For now just returning the first instant we find.
+            instances = self.tag({'xbrli:instant'})
+            
+            if instances and instances[0].string:
+                self._period = datetime.date.fromisoformat(instances[0].string)
+            else:
+                self._period = datetime.date.fromisoformat('1900-01-01')
+            return self._period
 
 
-# In[62]:
+# In[248]:
 
 
 class IXContinuation(Element):
@@ -150,7 +168,7 @@ class IXContinuation(Element):
     pass
 
 
-# In[63]:
+# In[249]:
 
 
 class IXExclude(Element):
@@ -165,7 +183,7 @@ class IXExclude(Element):
     pass
 
 
-# In[64]:
+# In[250]:
 
 
 class IXFootnote(Element):
@@ -185,7 +203,7 @@ class IXFootnote(Element):
     pass
 
 
-# In[65]:
+# In[251]:
 
 
 class IXFraction(Element):
@@ -208,7 +226,7 @@ class IXFraction(Element):
     pass
 
 
-# In[66]:
+# In[252]:
 
 
 class IXDenominator(Element):
@@ -225,7 +243,7 @@ class IXDenominator(Element):
     pass
 
 
-# In[67]:
+# In[253]:
 
 
 class IXNumerator(Element):
@@ -242,7 +260,7 @@ class IXNumerator(Element):
     pass
 
 
-# In[68]:
+# In[254]:
 
 
 class IXHidden(Element):
@@ -256,7 +274,7 @@ class IXHidden(Element):
     pass
 
 
-# In[69]:
+# In[255]:
 
 
 class IXNonFraction(Element):
@@ -291,11 +309,11 @@ class IXNonFraction(Element):
         # Optional scale attribute will be 0, 3 or 6, number needs to be multiplied by 10 ** scale.
         
         # Have to remove commas from the number (sigh).
-        # A non-numeric value raises exception.
+        # A non-numeric value raises exception, we treat that case as a zero (often it's a dash character).
         try:
             number = int(self.tag.string.replace(',', ''))
         except:
-            return self.tag.string
+            return '0'
         
         try:
             # In an exception handler in case there is no scale.
@@ -306,7 +324,7 @@ class IXNonFraction(Element):
         return str(number)
 
 
-# In[70]:
+# In[256]:
 
 
 class IXNonNumeric(Element):
@@ -331,7 +349,7 @@ class IXNonNumeric(Element):
     pass
 
 
-# In[71]:
+# In[257]:
 
 
 class IXReferences(Element):
@@ -349,7 +367,7 @@ class IXReferences(Element):
     pass
 
 
-# In[72]:
+# In[258]:
 
 
 class IXRelationship(Element):
@@ -367,7 +385,7 @@ class IXRelationship(Element):
     pass
 
 
-# In[73]:
+# In[259]:
 
 
 class IXResources(Element):
@@ -381,7 +399,7 @@ class IXResources(Element):
     pass
 
 
-# In[74]:
+# In[260]:
 
 
 class IXTuple(Element):
@@ -403,7 +421,7 @@ class IXTuple(Element):
     pass
 
 
-# In[75]:
+# In[261]:
 
 
 # Global that correlates tag names with the class representing that tag.
@@ -426,7 +444,7 @@ element_classes = {
 }
 
 
-# In[76]:
+# In[262]:
 
 
 class InputCriteria:
@@ -463,7 +481,7 @@ class InputCriteria:
         return True
 
 
-# In[77]:
+# In[263]:
 
 
 class XbrliDocument:
@@ -509,7 +527,7 @@ class XbrliDocument:
         return self._contexts
 
 
-# In[78]:
+# In[264]:
 
 
 class SummarySpreadsheet:    
@@ -592,6 +610,38 @@ class SummarySpreadsheet:
         for output_name, inputs in self.output_fields.items():
             values = []
             for doc in self.docs:
+                # NOW:
+                # The criteria may match more than one element in the document. In that case,
+                # if the matching elements have a date in their contexts, choose the most recent date.
+                # Otherwise choose the last element found.
+                for criteria in inputs:
+                    elements_found = []
+                    for element in doc.ix_elements:
+                        if criteria.matches_element(element):
+                            elements_found.append(element)
+                            
+                    if elements_found:
+                        # Sort elements found by the context date (if any) and take the most recent date.
+                        # If no context dates, this means returning the last element found.
+                        elements_found.sort(key = lambda element: element.context.period)
+                        values.append(elements_found[-1].string)
+                        break
+                    
+                # If no value for this output field, need an empty value.
+                if not elements_found:
+                    values.append('')
+            sheet_data[output_name] = values         
+        return DataFrame(sheet_data)
+
+    @property
+    def orig_dataframe(self):
+        # Build up data dictionary to become DataFrame.
+        sheet_data = OrderedDict()
+        
+        # For each output field, go through each doc and get the value based on input fields
+        for output_name, inputs in self.output_fields.items():
+            values = []
+            for doc in self.docs:
                 for criteria in inputs:
                     value_found = False
                     for element in doc.ix_elements:
@@ -660,7 +710,7 @@ class SummarySpreadsheet:
         return pd.to_numeric(converted, downcast=downcast)
 
 
-# In[79]:
+# In[265]:
 
 
 def main(paths=None):
@@ -677,7 +727,7 @@ def main(paths=None):
     print('Generated output.xlsx')
 
 
-# In[80]:
+# In[266]:
 
 
 def test():
@@ -688,7 +738,7 @@ def test():
     main(paths)
 
 
-# In[81]:
+# In[267]:
 
 
 #main()
