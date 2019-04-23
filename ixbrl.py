@@ -477,7 +477,7 @@ class XbrliDocument:
         
         self.path = path
 
-        soup = BeautifulSoup(html, 'lxml')
+        soup = BeautifulSoup(html, 'html.parser')
         self.ix_elements = [element_classes[tag.name](tag, self) for tag in soup.find_all({re.compile(r'^ix:')})]
                 
     @property
