@@ -1,23 +1,21 @@
 Output Field Name,Input Field Name (minimum required context items)
-Name of Government,cafr:NameOfGovernment
-State,cafr:NameOfState
-Fiscal Year End,cafr:FiscalEndDate
-Audit Opinion,cafr:AuditOpinion
-Audit Firm,cafr:NameOfAuditFirm
-Cash and Cash Equivalents - Governmental Activities,cafr:CashAndCashEquivalents (cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
-Cash and Cash Equivalents - Governmental Activities,cafr:CashAndCashEquivalents (c_GovernmentalActivities_AsOf30Jun2018)
-Liabilities - Governmental Activities,cafr:Liabilities (cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
-Net Position - Governmental Activities,cafr:NetPosition (cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
-Unrestricted Net Position - Governmental Activities,cafr:NetPositionUnrestricted (cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
-Charges for Services - Governmental Activities,cafr:ChargesForServices (cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
-Operating Grants And Contributions - Governmental Activities,cafr:OperatingGrantsAndContributions (cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
-Capital Grants And Contributions - Governmental Activities,cafr:CapitalGrantsAndContributions (cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
-Expenses - Governmental Activities,cafr:Expenses (cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
-Change In Net Position - Governmental Activities,cafr:ChangeInNetPosition (cafr:GovernmentalTypeActivityMember cafr:PrimaryGovernmentActivitiesMember)
-Nonspendable General Fund Balance,cafr:NonspendableFundBalance (cafr:GeneralFundMember)
-Committed General Fund Balance,cafr:CommittedFundBalance (cafr:GeneralFundMember)
-Assigned General Fund Balance,cafr:AssignedFundBalance (cafr:GeneralFundMember)
-Unassigned General Fund Balance,cafr:UnassignedFundBalance (cafr:GeneralFundMember)
-Total General Fund Balance,cafr:TotalFundBalance (cafr:GeneralFundMember)
-General Fund Revenues,cafr:Revenues (cafr:GeneralFundMember)
-General Fund Expenditures,cafr:Expenditures (cafr:GeneralFundMember)
+Name of Government,us-cafr:NameOfGovernment
+State,us-cafr:NameOfState
+Fiscal Year End,us-cafr:FiscalEndDate
+Audit Opinion,us-cafr:AuditOpinion
+Audit Firm,us-cafr:NameOfAuditFirm
+Cash and Cash Equivalents - Governmental Activities,us-cafr:CashAndCashEquivalents (us-cafr:PrimaryGovernmentActivitiesMember)
+Liabilities - Governmental Activities,us-cafr:Liabilities (us-cafr:GovernmentalActivitiesMember us-cafr:NetMember)
+Net Position - Governmental Activities,us-cafr:NetPosition (us-cafr:GovernmentalActivitiesMember)
+Unrestricted Net Position - Governmental Activities,us-cafr:NetPosition (us-cafr:GovernmentalActivitiesMember us-cafr:UnrestrictedMember)
+Charges for Services - Governmental Activities,us-cafr:RevenueFromChargesForServicesAndSales (us-cafr:GovernmentalActivitiesMember)
+Operating Grants And Contributions - Governmental Activities,us-cafr:RevenueFromOperatingGrantsAndContributionsAndInterest (us-cafr:GovernmentalActivitiesMember)
+Capital Grants And Contributions - Governmental Activities,us-cafr:RevenueFromCapitalGrantsAndContributionsAndInterest (us-cafr:GovernmentalActivitiesMember)
+Expenses - Governmental Activities,us-cafr:Expenses (us-cafr:GovernmentalActivitiesMember us-cafr:NetMember)
+Change In Net Position - Governmental Activities,us-cafr:ChangesInNetPosition (us-cafr:GovernmentalActivitiesMember us-cafr:NetMember)
+Committed General Fund Balance,us-cafr:FundBalances (us-cafr:GeneralFundMember us-cafr:CommittedMember)
+Assigned General Fund Balance,us-cafr:FundBalances (us-cafr:GeneralFundMember us-cafr:AssignedMember)
+Unassigned General Fund Balance,us-cafr:FundBalances (us-cafr:GeneralFundMember us-cafr:UnassignedMember)
+Total General Fund Balance,us-cafr:FundBalances (us-cafr:GeneralFundMember)
+General Fund Revenues,us-cafr:Revenues (us-cafr:GeneralFundMember)
+General Fund Expenditures,us-cafr:Expenditures (us-cafr:GeneralFundMember)
