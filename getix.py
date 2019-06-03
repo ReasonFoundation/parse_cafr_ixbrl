@@ -258,7 +258,6 @@ def main(paths=None):
 
 
 def test():
-    from mydir import mydir
     from pathlib import Path
     
     paths = [str(path) for path in Path('test_data').iterdir() if '.xhtml' in str(path) or '.htm' in str(path)]

@@ -36,7 +36,7 @@ class Element:
     def name(self):
         # This is the iXBRL name attribute, not the BeautifulSoup tag name...
         return self.tag['name']
-    
+     
     @property
     def string(self):
         return self.tag.string
@@ -75,6 +75,10 @@ class IXHeader(Element):
 
 
 # In[247]:
+class XBRLDIExplicitMember(Element):
+    @property
+    def dimension(self):
+        return self.tag['dimension']
 
 
 class XBRLIContext(Element):
@@ -85,17 +89,55 @@ class XBRLIContext(Element):
     @property
     def id(self):
         return self.tag['id']
-    
+
     @property
     def explicit_members(self):
+        '''
+        Returns a dictionary with keys being the string value and values being the object.
+        This allows for easily checking membership without having to go through the objects.
+        '''
         try:
             return self._explicit_members
         except:
-            # Using a set for fast searching.
-            self._explicit_members = set()            
-            for member in self.tag({'xbrldi:explicitmember'}):
-                self.explicit_members.add(member.string)
+            self._explicit_members = {}           
+            for member_tag in self.tag({'xbrldi:explicitmember'}):
+                member = XBRLDIExplicitMember(member_tag, self.doc)
+                self._explicit_members[member.string] = member
         return self._explicit_members
+ 
+    @property
+    def start_date(self):
+        '''
+        TODO: Need spec review to handle this properly. Probably should return datetime object.
+        '''
+        date_tag = self.tag.find('xbrli:startdate')
+        if date_tag:
+            return date_tag.string
+        else:
+            return ''
+
+    @property
+    def end_date(self):
+        '''
+        TODO: Need spec review to handle this properly. Probably should return datetime object.
+        '''
+        date_tag = self.tag.find('xbrli:enddate')
+        if date_tag:
+            return date_tag.string
+        else:
+            return ''
+
+    @property
+    def instant(self):
+        '''
+        TODO: This assumes just one instance and returns empty string if it doesn't exist.
+        TODO: Need spec review to handle this properly.
+        '''
+        instant_tag = self.tag.find('xbrli:instant')
+        if instant_tag:
+            return instant_tag.string
+        else:
+            return ''
     
     @property
     def period(self):
