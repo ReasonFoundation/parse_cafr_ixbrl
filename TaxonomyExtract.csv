@@ -1,0 +1,303 @@
+itemname,category,sub category,sub sub category,sub sub sub category
+AccountsPayable,,,Liabilities,Current liabilities
+AccountsReceivable,,Assets and deferred outflows of resources,Assets,Current assets
+AccruedExpensesPayable,,,Liabilities,Current liabilities
+AccruedInterestPayable,,,Liabilities,Current liabilities
+AccruedWagesAndRelatedLiabilitiesPayable,,,Liabilities,Current liabilities
+AdjustmentsForTransferOfRevenuesWithinActivities,Statement of activities,Revenues,Adjustments for transfer of revenues within activities,
+AdjustmentsInFundBalancesForDecrease(Increase)InAssets,Governmental funds  Balance sheet ,Fund balances,,
+AdjustmentsInFundBalancesForIncrease(Decrease)InLiabilities,Governmental funds  Balance sheet ,Fund balances,,
+AdjustmentsInFundBalancesForRestatements(ErrorsAndAccountingPolicy),Governmental funds  Balance sheet ,Fund balances,,
+AdjustmentsInNetPositionForRestatements(ErrorsAndAccountingPolicy),Statement of activities,Revenues,Net position,
+AdvancesFromGrantors,,,Liabilities,Current liabilities
+AdvancesFromOtherFunds,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Liabilities,
+AdvancesToOtherFunds,Governmental funds  Balance sheet ,Assets and deferred outflows of resources,Assets,
+AmountHeldForOthers,,,Liabilities,Current liabilities
+AuditOpinion,Filing information,,,
+AuditStatus,Filing information,,,
+AverageNumberOfUtilityCustomers,Filing information,,,
+BondsAndInterestPayable,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Liabilities,
+BondsAndInterestPayableNonCurrent,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Non current liabilities
+BusinessLicenseTax,,Revenues,General revenues,
+CapitalAssetsDepreciable(NetOfAccumulatedDepreciationAndAmortization),Statement of net position ,Assets and deferred outflows of resources,Assets,Non current assets
+CapitalAssetsNonDepreciable,Statement of net position ,Assets and deferred outflows of resources,Assets,Non current assets
+CapitalOutlay,Governmental funds  Balance sheet ,Expenditures,,
+CashAndCashEquivalentsAndInvestments,,Assets and deferred outflows of resources,Assets,Current assets
+CashAndCashEquivalentsOthers,,Assets and deferred outflows of resources,Assets,Current assets
+CashAndCashEquivalentsWithFiscalAndEscrowAndOtherAgents,,Assets and deferred outflows of resources,Assets,Current assets
+CashAndCashEquivalentsWithTreasurer,,Assets and deferred outflows of resources,Assets,Current assets
+CashAndCashEquivalentsWithTrustee,,Assets and deferred outflows of resources,Assets,Current assets
+CashAndInvestments,,Assets and deferred outflows of resources,Assets,Current assets
+ChangesInFairValueOfInvestments,,Revenues,General revenues,
+ChangesInFundBalances,Governmental funds  Balance sheet ,Fund balances,,
+ChangesInNetPosition,Statement of activities,Revenues,Net position,
+ChargesForServicesAndSales,Governmental funds  Balance sheet ,Revenues,,
+ClaimsAndJudgmentsPayable ,,,Liabilities,Current liabilities
+ClaimsAndJudgmentsReceivable ,,Assets and deferred outflows of resources,Assets,Current assets
+CompensatedAbsencesPayable,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Liabilities,
+CompensatedAbsencesPayableNonCurrent,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Non current liabilities
+ContributionsFromPrimaryGovernment,Statement of activities,Revenues,General revenues,
+CostOfIssueOfBondsAndSecurities,,,Expenses,
+CurrentLiabilities,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Current liabilities
+DateOfAuditOpinion,Filing information,,,
+DateOfTransmittal,Filing information,,,
+DebtServicingOfInterestAndFiscalCharges,,,Expenses,
+DebtServicingOfPrincipalRepayment,,,Expenses,
+DeferredInflowsOfResources,,,Deferred inflows of resources,
+DeferredOutflowsOfResources,,Assets and deferred outflows of resources,Deferred outflows of resources,
+DepositsPayable,,,Liabilities,Current liabilities
+DepositsReceivable,,Assets and deferred outflows of resources,Assets,Current assets
+DerivativeInstrumentsAssets,Governmental funds  Balance sheet ,Assets and deferred outflows of resources,Assets,
+DerivativeInstrumentsAssetsCurrent,Statement of net position ,Assets and deferred outflows of resources,Assets,Current assets
+DerivativeInstrumentsAssetsNonCurrent,Statement of net position ,Assets and deferred outflows of resources,Assets,Non current assets
+DerivativeInstrumentsLiability,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Liabilities,
+DerivativeInstrumentsLiabilityCurrent,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Current liabilities
+DerivativeInstrumentsLiabilityNonCurrent,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Non current liabilities
+DocumentsTransferTax,,Revenues,General revenues,
+DocumentTitle,Filing information,,,
+DueFromComponentUnit,Statement of net position ,Assets and deferred outflows of resources,Assets,Current assets
+DueFromEntitiesFunds,Statement of net position ,Assets and deferred outflows of resources,Assets,Current assets
+DueFromFiduciaryFunds,Statement of net position ,Assets and deferred outflows of resources,Assets,Current assets
+DueFromOtherFunds,,Assets and deferred outflows of resources,Assets,Current assets
+DueFromOtherGovernmentEntities,,Assets and deferred outflows of resources,Assets,Current assets
+DueFromOthers,,Assets and deferred outflows of resources,Assets,Current assets
+DueFromPrimaryGovernmentEntities ,Statement of net position ,Assets and deferred outflows of resources,Assets,Current assets
+DueToComponentUnit,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Current liabilities
+DueToEntitiesFunds,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Current liabilities
+DueToFiduciaryFunds,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Current liabilities
+DueToOtherFunds,,,Liabilities,Current liabilities
+DueToOtherGovernmentEntities,,,Liabilities,Current liabilities
+DueToOthers,,,Liabilities,Current liabilities
+DueToPrimaryGovernmentEntities ,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Current liabilities
+EmployerIdentificationNumber,Filing information,,,
+Example|Contd…,Governmental funds  Balance sheet ,,,
+Example|OtherExpenditures#1,Governmental funds  Balance sheet ,Expenditures,,
+Example|OtherExpenditures#2,Governmental funds  Balance sheet ,Expenditures,,
+Example|OtherExpenditures#3,Governmental funds  Balance sheet ,Expenditures,,
+Example|OtherFinancingSources(Uses)#1,Governmental funds  Balance sheet ,Other financing sources (uses),,
+Example|OtherFinancingSources(Uses)#2,Governmental funds  Balance sheet ,Other financing sources (uses),,
+Example|OtherFinancingSources(Uses)#3,Governmental funds  Balance sheet ,Other financing sources (uses),,
+Example|OtherRevenues#1,Governmental funds  Balance sheet ,Revenues,,
+Example|OtherRevenues#2,Governmental funds  Balance sheet ,Revenues,,
+Example|OtherRevenues#3,Governmental funds  Balance sheet ,Revenues,,
+Excess(Deficiency)OfRevenuesOver(Under)Expenditures,Governmental funds  Balance sheet ,,,
+Expenditures,Governmental funds  Balance sheet ,Expenditures,,
+Expenses,Statement of activities,Revenues,Expenses,
+FinesAndForfeituresAndPenalties,,Revenues,General revenues,
+FiscalEndDate,Filing information,,,
+FiscalStartDate,Filing information,,,
+FranchiseIncomeTax,,Revenues,General revenues,
+FundBalances,Governmental funds  Balance sheet ,,Fund balances,
+FundBalancesAssigned,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Fund balances,
+FundBalancesAtBeginningOfPeriod(AfterAdjustments),Governmental funds  Balance sheet ,Fund balances,,
+FundBalancesAtBeginningOfPeriod(BeforeAdjustments),Governmental funds  Balance sheet ,Fund balances,,
+FundBalancesCommitted,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Fund balances,
+FundBalancesNonSpendable,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Fund balances,
+FundBalancesRestricted,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Fund balances,
+FundBalancesUnassigned,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Fund balances,
+Gain(Loss)OnSaleOfCapitalAssets,Statement of activities,Revenues,General revenues,
+GeneralGovernmentServicesAdministration,,,Program revenues,
+GeneralRevenues,Statement of activities,Revenues,General revenues,
+GrantsAndEntitlementsNotRestrictedToSpecificPrograms,,Revenues,General revenues,
+GrantsAndEntitlementsRestrictedToSpecificPrograms,,Revenues,General revenues,
+GrantsContributionsAndDonationsFromFederalGovernmentalEntities,Governmental funds  Balance sheet ,Revenues,,
+GrantsContributionsAndDonationsFromOthers,Governmental funds  Balance sheet ,Revenues,,
+GrantsContributionsAndDonationsFromStateGovernmentalEntities,Governmental funds  Balance sheet ,Revenues,,
+GrantsPayable,,,Liabilities,Current liabilities
+GrantsReceivable,,Assets and deferred outflows of resources,Assets,Current assets
+HotelAndMotelTax,,Revenues,General revenues,
+IncomeTax,,Revenues,General revenues,
+IncomeTaxReceivable,,Assets and deferred outflows of resources,Assets,Current assets
+InsideMillage,Filing information,,,
+InterFundsBalancesPayable,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Liabilities,
+InterFundsBalancesReceivable,Governmental funds  Balance sheet ,Assets and deferred outflows of resources,Assets,
+InterGovernmentalActivities,Governmental funds  Balance sheet ,,,
+InterGovernmentalBalancesPayable,,,Liabilities,Current liabilities
+InterGovernmentalBalancesReceivable,,Assets and deferred outflows of resources,Assets,Current assets
+InterGovernmentalRevenuesRestricted,Statement of activities,Revenues,General revenues,
+InterGovernmentalRevenuesUnrestricted,Statement of activities,Revenues,General revenues,
+InternalBalancesPayable,,,Liabilities,Current liabilities
+InternalBalancesReceivable,,Assets and deferred outflows of resources,Assets,Current assets
+Inventories,Governmental funds  Balance sheet ,Assets and deferred outflows of resources,Assets,
+InventoriesCurrent,Statement of net position ,Assets and deferred outflows of resources,Assets,Current assets
+InventoriesNonCurrent,Statement of net position ,Assets and deferred outflows of resources,Assets,Non current assets
+InvestmentIncome,,Revenues,General revenues,
+InvestmentIncomeReceivable,,Assets and deferred outflows of resources,Assets,Current assets
+InvestmentsInAssociates,Statement of net position ,Assets and deferred outflows of resources,Assets,Non current assets
+InvestmentsInJointVentures,Statement of net position ,Assets and deferred outflows of resources,Assets,Non current assets
+InvestmentsInSubsidiaries,Statement of net position ,Assets and deferred outflows of resources,Assets,Non current assets
+InvestmentsWithFiscalAgents,,Assets and deferred outflows of resources,Assets,Current assets
+InvestmentsWithStateTreasury ,,Assets and deferred outflows of resources,Assets,Current assets
+LeasesPayable,,,Liabilities,Current liabilities
+LeasesReceivable,,Assets and deferred outflows of resources,Assets,Current assets
+LegalEntityIdentifier,Filing information,,,
+Liabilities,,Liabilities and deferred inflows of resources and net position,Liabilities,
+LiabilitiesAndDeferredInflowsOfResourcesAndFundBalances,Governmental funds  Balance sheet ,,,
+LiabilitiesAndDeferredInflowsOfResourcesAndNetPosition,Statement of net position ,Liabilities and deferred inflows of resources and net position,,
+LicensesAndPermitsAndFranchiseFees,,Revenues,General revenues,
+LoansPayable,,,Liabilities,Current liabilities
+LoansReceivable,,Assets and deferred outflows of resources,Assets,Current assets
+LongTermLiabilities,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Liabilities,
+LongTermLiabilitiesCurrent,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Current liabilities
+LongTermLiabilitiesNonCurrent,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Non current liabilities
+MaturedBondsAndInterestPayable,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Liabilities,
+MaturedBondsAndInterestPayableCurrent,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Current liabilities
+MaturedCompensatedAbsencesPayable,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Liabilities,
+MaturedCompensatedAbsencesPayableCurrent,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Current liabilities
+MealsTax,,Revenues,General revenues,
+MiscellanousNonCurrentAssets,Statement of net position ,Assets and deferred outflows of resources,Assets,Non current assets
+NameOfAdjustmentsForTransferOfRevenuesWithinActivities,Statement of activities,Revenues,Adjustments for transfer of revenues within activities,
+NameOfAuditFirm,Filing information,,,
+NameOfCapitalAssetsDepreciable(NetOfAccumulatedDepreciationAndAmortization),Statement of net position ,Assets and deferred outflows of resources,Assets,Non current assets
+NameOfCapitalAssetsNonDepreciable,Statement of net position ,Assets and deferred outflows of resources,Assets,Non current assets
+NameOfDeferredInflowsOfResources,,,Deferred inflows of resources,
+NameOfDeferredOutflowsOfResources,,Assets and deferred outflows of resources,Deferred outflows of resources,
+NameOfFundBalancesAssigned,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Fund balances,
+NameOfFundBalancesCommitted,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Fund balances,
+NameOfFundBalancesNonSpendable,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Fund balances,
+NameOfFundBalancesRestricted,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Fund balances,
+NameOfGovernment,Filing information,,,
+NameOfMiscellanousNonCurrentAssets,Statement of net position ,Assets and deferred outflows of resources,Assets,Non current assets
+NameOfNetPositionRestricted,Statement of net position ,Net Position,,
+NameOfNonCurrentLiabilitiesDueInMoreThanOneYear,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Non current liabilities
+NameOfNonCurrentLiabilitiesDueWithinOneYear,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Non current liabilities
+NameOfOtherAssets,Governmental funds  Balance sheet ,Assets and deferred outflows of resources,Assets,Other assets
+NameOfOtherCurrentAssets,Statement of net position ,Assets and deferred outflows of resources,Assets,Current assets
+NameOfOtherCurrentLiabilities,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Current liabilities
+NameOfOtherExpenditures,Governmental funds  Balance sheet ,Expenditures,,
+NameOfOtherExpenses,Statement of activities,Revenues,Expenses,
+NameOfOtherFinancingSources(Uses),Governmental funds  Balance sheet ,Other financing sources (uses),,
+NameOfOtherGeneralRevenues,Statement of activities,Revenues,General revenues,
+NameOfOtherLiabilities,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Liabilities,
+NameOfOtherNonCurrentLiabilities,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Non current liabilities
+NameOfOtherRevenues,Governmental funds  Balance sheet ,Revenues,,
+NameOfPayableFromRestrictedAssets,,,Liabilities,Non current liabilities
+NameOfProgramRevenuesFromOtherCapitalGrantsAndContributions,Statement of activities,Revenues,Program revenues,Program revenues from capital grants and contributions
+NameOfProgramRevenuesFromOtherChargesForServicesAndSales,Statement of activities,Revenues,Program revenues,Program revenues from charges for services and sales
+NameOfProgramRevenuesFromOtherOperatingGrantsAndContributions,Statement of activities,Revenues,Program revenues,Program revenues from operating grants and contributions
+NameOfRestrictedAssets,,Assets and deferred outflows of resources,Assets,Restricted assets
+NameOfState,Filing information,,,
+NetCapitalAssets,Statement of net position ,Assets and deferred outflows of resources,Assets,Non current assets
+NetInvestmentInCapitalAssets,Statement of net position ,Liabilities and deferred inflows of resources and net position,,
+NetPensionAsset,,Assets and deferred outflows of resources,Assets,Non current assets
+NetPensionLiability,,,Liabilities,Non current liabilities
+NetPosition,Statement of activities,Revenues,Net position,
+NetPositionAtBeginningOfPeriod(AfterAdjustments),Statement of activities,Revenues,Net position,
+NetPositionAtBeginningOfPeriod(BeforeAdjustments),Statement of activities,Revenues,Net position,
+NetPositionAtEndOfPeriod,Statement of activities,Revenues,Net position,
+NetPositionRestricted,Statement of net position ,Net Position,,
+NetPositionUnrestricted,Statement of net position ,Net Position,,
+NonCurrentAssets,Statement of net position ,Assets and deferred outflows of resources,Assets,Non current assets
+NonCurrentLiabilities,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Non current liabilities
+NonCurrentLiabilitiesDueInMoreThanOneYear,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Non current liabilities
+NonCurrentLiabilitiesDueWithinOneYear,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Non current liabilities
+NotesPayable,,,Liabilities,Current liabilities
+NotesReceivable,,Assets and deferred outflows of resources,Assets,Current assets
+OrderOfMagnitude,Filing information,,,
+OtherAssets,Governmental funds  Balance sheet ,Assets and deferred outflows of resources,Assets,Other assets
+OtherCurrentAssets,Statement of net position ,Assets and deferred outflows of resources,Assets,Current assets
+OtherCurrentInvestments,Statement of net position ,Assets and deferred outflows of resources,Assets,Current assets
+OtherCurrentLiabilities,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Current liabilities
+OtherExpenditures,Governmental funds  Balance sheet ,Expenditures,,
+OtherExpenses,Statement of activities,Revenues,Expenses,
+OtherFinancingSources(Uses),Governmental funds  Balance sheet ,Other financing sources (uses),,
+OtherGeneralRevenues,Statement of activities,Revenues,General revenues,
+OtherInvestments,Governmental funds  Balance sheet ,Assets and deferred outflows of resources,Assets,
+OtherLiabilities,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Liabilities,
+OtherNonCurrentAssets,Statement of net position ,Assets and deferred outflows of resources,Assets,Non current assets
+OtherNonCurrentInvestments,Statement of net position ,Assets and deferred outflows of resources,Assets,Non current assets
+OtherNonCurrentLiabilities,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Non current liabilities
+OtherPostEmploymentBenefitsPlanAssets,Governmental funds  Balance sheet ,Assets and deferred outflows of resources,Assets,
+OtherPostEmploymentBenefitsPlanAssetsCurrent,Statement of net position ,Assets and deferred outflows of resources,Assets,Current assets
+OtherPostEmploymentBenefitsPlanAssetsNonCurrent,Statement of net position ,Assets and deferred outflows of resources,Assets,Non current assets
+OtherPostEmploymentBenefitsPlanLiability,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Liabilities,
+OtherPostEmploymentBenefitsPlanLiabilityCurrent,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Current liabilities
+OtherPostEmploymentBenefitsPlanLiabilityNonCurrent,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Non current liabilities
+OtherPrepaidAssets,,Assets and deferred outflows of resources,Assets,Current assets
+OtherReceivables,,Assets and deferred outflows of resources,Assets,Current assets
+OtherRevenues,Governmental funds  Balance sheet ,Revenues,,
+OtherTaxes,,Revenues,General revenues,
+OtherTaxesReceivable,,Assets and deferred outflows of resources,Assets,Current assets
+OutsideMillage,Filing information,,,
+ParkingOccupancyTax,,Revenues,General revenues,
+PayableFromRestrictedAssets,,,Liabilities,Non current liabilities
+PayablesForContracts,,,Liabilities,Current liabilities
+PayablesForOthers,,,Liabilities,Current liabilities
+PenaltiesPayable,,,Liabilities,Current liabilities
+PenaltiesReceivable,,Assets and deferred outflows of resources,Assets,Current assets
+PerformanceBondsPayable,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Liabilities,
+PerformanceBondsPayableCurrent,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Current liabilities
+PerformanceBondsPayableNonCurrent,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Non current liabilities
+PooledCashAndInvestments,,Assets and deferred outflows of resources,Assets,Current assets
+PooledInvestments,,Assets and deferred outflows of resources,Assets,Current assets
+Prepaid OtherPostEmploymentBenefitsPlan,Governmental funds  Balance sheet ,Assets and deferred outflows of resources,Assets,
+PrepaidDeposits,,Assets and deferred outflows of resources,Assets,Current assets
+PrepaidExpenses,,Assets and deferred outflows of resources,Assets,Current assets
+PrepaidOtherPostEmploymentBenefitsPlan,Statement of net position ,Assets and deferred outflows of resources,Assets,Current assets
+ProgramRevenue,Governmental funds  Balance sheet ,Revenues,,
+ProgramRevenuesFromCapitalGrantsAndContributions,Statement of activities,Revenues,Program revenues,Program revenues from capital grants and contributions
+ProgramRevenuesFromOperatingGrantsAndContributions,Statement of activities,Revenues,Program revenues,Program revenues from operating grants and contributions
+ProgramRevenuesFromOtherCapitalGrantsAndContributions,Statement of activities,Revenues,Program revenues,Program revenues from capital grants and contributions
+ProgramRevenuesFromOtherChargesForServicesAndSales,Statement of activities,Revenues,Program revenues,Program revenues from charges for services and sales
+ProgramRevenuesFromOtherOperatingGrantsAndContributions,Statement of activities,Revenues,Program revenues,Program revenues from operating grants and contributions
+PropertyTax,,Revenues,General revenues,
+PropertyTaxesReceivable,,Assets and deferred outflows of resources,Assets,Current assets
+PropertyTaxValuation,Filing information,,,
+PropertyTransferTax,,Revenues,General revenues,
+Provisions,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Liabilities,
+ProvisionsCurrent,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Current liabilities
+ProvisionsNonCurrent,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Non current liabilities
+ReceiptsInLieuOfTax,,Revenues,General revenues,
+ReceivablesFromContracts,,Assets and deferred outflows of resources,Assets,Current assets
+RecoveryOfCostIncurred,,Revenues,General revenues,
+RegulatoryAssets,Governmental funds  Balance sheet ,Assets and deferred outflows of resources,Assets,
+RegulatoryAssetsCurrent,Statement of net position ,Assets and deferred outflows of resources,Assets,Current assets
+RegulatoryAssetsNonCurrent,Statement of net position ,Assets and deferred outflows of resources,Assets,Non current assets
+RegulatoryLiability,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Liabilities,
+RegulatoryLiabilityCurrent,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Current liabilities
+RegulatoryLiabilityNonCurrent,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Non current liabilities
+ReportingCurrency,Filing information,,,
+ReportingFrequency,Filing information,,,
+RestrictedAssets,,Assets and deferred outflows of resources,Assets,Restricted assets
+RetainagePayable,,,Liabilities,Current liabilities
+RevenueFromUseOfMoneyAndProperty,,Revenues,General revenues,
+RevenueInLieuOfTaxesReceivable,,Assets and deferred outflows of resources,Assets,Current assets
+SalesAndUseTax,,Revenues,General revenues,
+SalesTax,,Revenues,General revenues,
+SalesTaxReceivable,,Assets and deferred outflows of resources,Assets,Current assets
+SecuritiesLendingCollateralAssets,,Assets and deferred outflows of resources,Assets,Current assets
+SecuritiesLendingObligationsLiability,,,Liabilities,Current liabilities
+ServicesToEnterpriseFunds,Governmental funds  Balance sheet ,Revenues,,
+SharedRevenue,,Revenues,General revenues,
+SpecialAssessments,,Revenues,General revenues,
+SpecialAssessmentTaxesReceivable,,Assets and deferred outflows of resources,Assets,Current assets
+TaxesPayable,,,Liabilities,Current liabilities
+TotalAnnualFinalAppropriationsForAllFunds,Filing information,,,
+TotalAssets,,Assets and deferred outflows of resources,Assets,Other assets
+TotalAssetsAndDeferredOutflowsOfResources,,Assets and deferred outflows of resources,Deferred outflows of resources,
+TotalCurrentAssets,Statement of net position ,Assets and deferred outflows of resources,Assets,Current assets
+TotalCurrentLiabilities,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Current liabilities
+TotalExpenditures,Governmental funds  Balance sheet ,Expenditures,,
+TotalExpenses,Statement of activities,Revenues,Expenses,
+TotalFundBalances,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Fund balances,
+TotalGeneralRevenues,Statement of activities,Revenues,General revenues,
+TotalLiabilities,,,Liabilities,
+TotalLiabilitiesAndDeferredInflowsOfResourcesAndFundBalances,Governmental funds  Balance sheet ,Liabilities and deferred inflows of resources and fund balances,Fund balances,
+TotalNetPosition,Statement of net position ,Net Position,,
+TotalNonCurrentAssets,Statement of net position ,Assets and deferred outflows of resources,Assets,Non current assets
+TotalNonCurrentLiabilities,Statement of net position ,Liabilities and deferred inflows of resources and net position,Liabilities,Non current liabilities
+TotalOtherNonCurrentAssets,Statement of net position ,Assets and deferred outflows of resources,Assets,Non current assets
+TotalProgramRevenues,Statement of activities,Revenues,Program revenues,
+TotalProgramRevenuesFromCapitalGrantsAndContributions,Statement of activities,Revenues,Program revenues,Program revenues from capital grants and contributions
+TotalProgramRevenuesFromChargesForServicesAndSales,Statement of activities,Revenues,Program revenues,Program revenues from charges for services and sales
+TotalProgramRevenuesFromOperatingGrantsAndContributions,Statement of activities,Revenues,Program revenues,Program revenues from operating grants and contributions
+TotalPropertyTaxRate,Filing information,,,
+TotalRevenues,,Revenues,Adjustments for transfer of revenues within activities,
+TransferStampsTax,,Revenues,General revenues,
+TransientOccupancyTax,,Revenues,General revenues,
+TypeOfGovernment,Filing information,,,
+UnearnedRevenue,,,Liabilities,Current liabilities
+UnitIdentificationNumber,Filing information,,,
+UsageOfUtilitiesTax,,Revenues,General revenues,
+VehiclesTax,,Revenues,General revenues,
+XBRLTaxonomyVersion,,,,
